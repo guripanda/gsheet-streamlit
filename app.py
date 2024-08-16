@@ -124,7 +124,7 @@ def preprocess_and_visualize(data):
                    [f'공동체역량{i}' for i in range(1, 7)]
         
     # 필요한 데이터만 선택
-    competency_columns = {
+    competency_units = {
         '자기관리역량': [f'자기관리역량{i}' for i in range(1, 7)],
         '창의융합적사고역량': [f'창의융합적사고역량{i}' for i in range(1, 7)],
         '공감소통역량': [f'공감소통역량{i}' for i in range(1, 7)],
@@ -132,33 +132,27 @@ def preprocess_and_visualize(data):
     }
     
     # 데이터 타입을 실수형으로 변환
-    for columns in competency_columns.values():
-        data[columns] = data[columns].astype(float)
+    data[list(sum(competency_units.values(), []))] = data[list(sum(competency_units.values(), []))].astype(float)
     
     # 학년별 평균값 계산 (각 역량별 평균값)
-    grade_avg = data.groupby('학년').mean(numeric_only=True).reset_index()
-
-    # 각 역량별 평균값을 계산
-    avg_competency = {}
-    for competency, columns in competency_columns.items():
-        avg_competency[f'{competency} 평균값'] = grade_avg[columns].mean(axis=1)
+    grade_avg = {}
+    for competency, columns in competency_units.items():
+        grade_avg[competency] = data.groupby('학년')[columns].mean(numeric_only=True).mean(axis=1).reset_index(name=f'{competency} 평균값')
+    
+    # 모든 역량별 평균값을 병합
+    grade_avg_df = pd.merge(grade_avg['자기관리역량'], grade_avg['창의융합적사고역량'], on='학년')
+    grade_avg_df = pd.merge(grade_avg_df, grade_avg['공감소통역량'], on='학년')
+    grade_avg_df = pd.merge(grade_avg_df, grade_avg['공동체역량'], on='학년')
     
     # 데이터프레임으로 변환
-    avg_competency_df = pd.DataFrame({
-        '학년': grade_avg['학년'],
-        **avg_competency
-    })
-
     # melt로 데이터 변형
-    avg_competency_melted = avg_competency_df.melt(id_vars='학년', var_name='역량', value_name='평균값')
-
+    grade_avg_melted = grade_avg_df.melt(id_vars='학년', var_name='역량', value_name='평균값')
 
     # 요약자료 보여주기
     st.markdown("**### 학년별 학생미래역량 현황**")
-    st.dataframe(grade_avg)
+    st.dataframe(grade_avg_df)
 
     # 방사형 그래프 그리기
-    # 그래프를 그릴 때 학년별 평균값을 개별적으로 시각화
     fig = px.line_polar(
         grade_avg_melted,
         r='평균값',
