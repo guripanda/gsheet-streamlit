@@ -123,35 +123,54 @@ def preprocess_and_visualize(data):
                    [f'공감소통역량{i}' for i in range(1, 7)] + \
                    [f'공동체역량{i}' for i in range(1, 7)]
         
-    # 필요한 데이터만 선택
-    self_management = data[[f'자기관리역량{i}' for i in range(1, 7)]].astype(float)
-    creative_thinking = data[[f'창의융합적사고역량{i}' for i in range(1, 7)]].astype(float)
-    empathy_communication = data[[f'공감소통역량{i}' for i in range(1, 7)]].astype(float)
-    community = data[[f'공동체역량{i}' for i in range(1, 7)]].astype(float)
-        
-    # 평균값 계산
-    average_self_management = self_management.mean().mean()
-    average_creative_thinking = creative_thinking.mean().mean()
-    average_empathy_communication = empathy_communication.mean().mean()
-    average_community = community.mean().mean()
-       
-    # 데이터프레임으로 변환
-    average_data = pd.DataFrame({
-        '역량': ['자기관리', '창의융합적사고', '공감소통', '공동체'],
-        '평균값': [average_self_management, average_creative_thinking, average_empathy_communication, average_community]
-    })
+    # 필요한 열들을 float 타입으로 변환
+    data.iloc[:, 5:] = data.iloc[:, 5:].astype(float)
 
-    # 요약자료 보여주기
-    st.markdown("**### 우리학교 학생미래역량 현황**")
-    st.dataframe(average_data)
-        
+    # 학년 및 성별에 따른 평균값 계산
+    grade_gender_avg = data.groupby(['학년', '성별']).mean().reset_index()
+
+    # 전체 평균값 계산 (모든 학년과 성별)
+    overall_avg = pd.DataFrame(data.iloc[:, 5:].mean()).T
+    overall_avg['학년'] = '전체'
+    overall_avg['성별'] = '전체'
+
+    # 학년, 성별 및 전체 평균값 결합
+    combined_avg = pd.concat([grade_gender_avg, overall_avg], axis=0)
+
+    # 더 쉽게 그래프를 그릴 수 있도록 DataFrame을 melt
+    melted_data = combined_avg.melt(id_vars=['학년', '성별'], 
+                                    value_vars=['자기관리역량1', '창의적사고역량1', 
+                                                '공감소통역량1', '공동체역량1'],
+                                    var_name='역량', value_name='평균')
+    
+    # 깔끔한 라벨을 위해 역량 번호 제거
+    melted_data['역량'] = melted_data['역량'].str.extract(r'([^\d]+)')
+
+    # 학년 및 성별 선택 드롭다운
+    selected_grade = st.selectbox("학년 선택", options=combined_avg['학년'].unique(), index=len(combined_avg['학년']) - 1)
+    selected_gender = st.selectbox("성별 선택", options=combined_avg['성별'].unique(), index=len(combined_avg['성별']) - 1)
+
+    # 선택된 학년 및 성별을 기준으로 데이터 필터링
+    if selected_grade == '전체' and selected_gender == '전체':
+        filtered_data = melted_data
+    elif selected_grade == '전체':
+        filtered_data = melted_data[melted_data['성별'] == selected_gender]
+    elif selected_gender == '전체':
+        filtered_data = melted_data[melted_data['학년'] == selected_grade]
+    else:
+        filtered_data = melted_data[(melted_data['학년'] == selected_grade) & (melted_data['성별'] == selected_gender)]
+
+    # 요약 데이터 표시
+    st.markdown(f"**### {selected_grade} 학년 {selected_gender}의 역량 평균 현황**")
+    st.dataframe(filtered_data.pivot(index='역량', columns='성별', values='평균'))
+
     # 방사형 그래프 그리기
     fig = px.line_polar(
-        average_data,
-        r='평균값',
+        filtered_data,
+        r='평균',
         theta='역량',
         line_close=True,
-        title="학생 설문 조사 평균 역량"
+        title=f"역량 평균 - {selected_grade} 학년 {selected_gender}"
     )
     st.plotly_chart(fig)
 
