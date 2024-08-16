@@ -148,6 +148,10 @@ def preprocess_and_visualize(data):
             '역량': ['자기관리', '창의융합적사고', '공감소통', '공동체'],
             '평균값': [average_self_management, average_creative_thinking, average_empathy_communication, average_community]
         })
+
+        # 요약자료 보여주기
+        st.markdown("**### 우리학교 학생미래역량 현황**")
+        st.dataframe(average_data)
         
         # 방사형 그래프 그리기
         fig = px.line_polar(
