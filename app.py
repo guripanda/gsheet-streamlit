@@ -59,7 +59,7 @@ def load_data(spreadsheet_id, sheet_name='Sheet1'):
         st.error("유효한 범위를 찾을 수 없습니다.")
         return None
 
-def create_or_get_sheet(1txggfKCwtJTpvVlWNXyUekEGdDXLo0Z-xkJTYQFi4T0, sheet_name):
+def create_or_get_sheet(spreadsheet_id, sheet_name):
     sheet = service.spreadsheets()
     
     # 시트 목록 가져오기
@@ -86,7 +86,7 @@ def create_or_get_sheet(1txggfKCwtJTpvVlWNXyUekEGdDXLo0Z-xkJTYQFi4T0, sheet_name
     
     return sheet_name
 
-def save_to_school_sheet(data, 1txggfKCwtJTpvVlWNXyUekEGdDXLo0Z-xkJTYQFi4T0, sheet_name):
+def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
     sheet = service.spreadsheets()
     
     # 시트의 범위를 지정
@@ -129,7 +129,7 @@ def preprocess_and_visualize(data):
         st.warning("데이터 형식이 올바르지 않습니다. 열 수가 맞지 않습니다.")
 
 # Streamlit UI
-st.title("학교별 데이터 수집 및 시각화")
+st.title("미래학교 역량검사 결과 분석")
 
 # 학교 이름 입력
 school_name = st.text_input("학교 이름을 입력하세요")
@@ -138,7 +138,7 @@ school_name = st.text_input("학교 이름을 입력하세요")
 user_url = st.text_input("Google Sheets URL을 입력하세요")
 
 # 데이터를 저장할 중앙 Google Sheets ID
-master_spreadsheet_id = 'your_master_spreadsheet_id_here'  # 중앙에서 데이터를 저장할 시트 ID 입력
+master_spreadsheet_id = '1txggfKCwtJTpvVlWNXyUekEGdDXLo0Z-xkJTYQFi4T0'  # 중앙에서 데이터를 저장할 시트 ID 입력
 
 if school_name and user_url:
     sheet_id = extract_sheet_id(user_url)
