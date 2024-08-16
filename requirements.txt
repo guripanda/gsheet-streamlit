@@ -1,4 +1,4 @@
-numpy==1.24.0
+numpy
 streamlit==1.19.0
 pandas==2.0.0
 google-auth==2.15.0
