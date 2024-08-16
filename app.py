@@ -125,7 +125,7 @@ def preprocess_and_visualize(data):
     # 데이터 전처리 및 평균값 계산
     if data.shape[1] == 30:  # 총 29열이 포함된 경우
         # 열 이름 지정
-        data.columns = ['Timestamp', '성별', '학년', '학반', '번호'] + \
+        data.columns = ['순','Timestamp', '성별', '학년', '학반', '번호'] + \
                        [f'자기관리역량{i}' for i in range(1, 7)] + \
                        [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
                        [f'공감소통역량{i}' for i in range(1, 7)] + \
@@ -180,9 +180,6 @@ if school_name and user_url:
         data = load_data(sheet_id)
         
         if data is not None:
-            #데이터프레임 표시
-            st.dataframe(data)
-            
             # 학교 이름으로 시트를 생성하거나 가져옴
             sheet_name = create_or_get_sheet(master_spreadsheet_id, school_name)
             
