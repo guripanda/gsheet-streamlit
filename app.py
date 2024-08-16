@@ -122,14 +122,22 @@ def preprocess_and_visualize(data):
                        [f'공동체역량{i}' for i in range(1, 7)]
         
         # 필요한 데이터만 선택
-        numerical_data = data[['자기관리역량1', '자기관리역량2', '자기관리역량3', '자기관리역량4', '자기관리역량5', '자기관리역량6',
-                               '창의융합적사고역량1', '창의융합적사고역량2', '창의융합적사고역량3', '창의융합적사고역량4', '창의융합적사고역량5', '창의융합적사고역량6',
-                               '공감소통역량1', '공감소통역량2', '공감소통역량3', '공감소통역량4', '공감소통역량5', '공감소통역량6',
-                               '공동체역량1', '공동체역량2', '공동체역량3', '공동체역량4', '공동체역량5', '공동체역량6']].astype(float)
+        self_management = data[[f'자기관리역량{i}' for i in range(1, 7)]].astype(float)
+        creative_thinking = data[[f'창의융합적사고역량{i}' for i in range(1, 7)]].astype(float)
+        empathy_communication = data[[f'공감소통역량{i}' for i in range(1, 7)]].astype(float)
+        community = data[[f'공동체역량{i}' for i in range(1, 7)]].astype(float)
         
         # 평균값 계산
-        average_data = numerical_data.mean().reset_index()
-        average_data.columns = ['역량', '평균값']
+        average_self_management = self_management.mean().mean()
+        average_creative_thinking = creative_thinking.mean().mean()
+        average_empathy_communication = empathy_communication.mean().mean()
+        average_community = community.mean().mean()
+        
+        # 데이터프레임으로 변환
+        average_data = pd.DataFrame({
+            '역량': ['자기관리', '창의융합적사고', '공감소통', '공동체'],
+            '평균값': [average_self_management, average_creative_thinking, average_empathy_communication, average_community]
+        })
         
         # 방사형 그래프 그리기
         fig = px.line_polar(
@@ -144,7 +152,7 @@ def preprocess_and_visualize(data):
         st.warning("데이터 형식이 올바르지 않습니다. 열 수가 맞지 않습니다.")
 
 # Streamlit UI
-st.title("미래학교 역량검사 결과 분석")
+st.title("대구미래학교 학생역량검사 결과 분석")
 
 # 학교 이름 입력
 school_name = st.text_input("학교 이름을 입력하세요")
