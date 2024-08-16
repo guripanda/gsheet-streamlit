@@ -136,16 +136,22 @@ def preprocess_and_visualize(data):
         data[columns] = data[columns].astype(float)
     
     # 학년별 평균값 계산 (각 역량별 평균값)
-    grade_avg = data.groupby('학년').agg(
-        **{competency: (columns, 'mean') for competency, columns in competency_columns.items()}
-    ).reset_index()
-    
-    # 열 이름 변경
-    grade_avg.columns = ['학년'] + [f'{competency} 평균값' for competency in competency_columns]
+    grade_avg = data.groupby('학년').mean(numeric_only=True).reset_index()
+
+    # 각 역량별 평균값을 계산
+    avg_competency = {}
+    for competency, columns in competency_columns.items():
+        avg_competency[f'{competency} 평균값'] = grade_avg[columns].mean(axis=1)
     
     # 데이터프레임으로 변환
-    # 먼저 melt로 데이터 변형
-    grade_avg_melted = grade_avg.melt(id_vars='학년', var_name='역량', value_name='평균값')
+    avg_competency_df = pd.DataFrame({
+        '학년': grade_avg['학년'],
+        **avg_competency
+    })
+
+    # melt로 데이터 변형
+    avg_competency_melted = avg_competency_df.melt(id_vars='학년', var_name='역량', value_name='평균값')
+
 
     # 요약자료 보여주기
     st.markdown("**### 학년별 학생미래역량 현황**")
