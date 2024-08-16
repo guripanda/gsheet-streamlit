@@ -100,7 +100,7 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
                 }
             ]
         }
-        response = sheet.batchUpdate(spreadsheetId=spreadsheet_id, body=requests).execute()
+        response = sheet.batchUpdate(spreadsheetId=master_spreadsheet_id, body=requests).execute()
         sheet_id = response['replies'][0]['addSheet']['properties']['sheetId']
         
     # 시트의 범위를 지정
