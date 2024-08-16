@@ -59,7 +59,7 @@ def load_data(spreadsheet_id, sheet_name='Sheet1'):
         st.error("유효한 범위를 찾을 수 없습니다.")
         return None
 
-def create_or_get_sheet(spreadsheet_id, sheet_name):
+def create_or_get_sheet(1txggfKCwtJTpvVlWNXyUekEGdDXLo0Z-xkJTYQFi4T0, sheet_name):
     sheet = service.spreadsheets()
     
     # 시트 목록 가져오기
@@ -86,7 +86,7 @@ def create_or_get_sheet(spreadsheet_id, sheet_name):
     
     return sheet_name
 
-def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
+def save_to_school_sheet(data, 1txggfKCwtJTpvVlWNXyUekEGdDXLo0Z-xkJTYQFi4T0, sheet_name):
     sheet = service.spreadsheets()
     
     # 시트의 범위를 지정
