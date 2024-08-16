@@ -39,7 +39,11 @@ def extract_sheet_id(url):
 
 def get_data_range(spreadsheet_id, sheet_name):
     sheet = service.spreadsheets()
-    response = sheet.values().get(spreadsheetId=spreadsheet_id, range=f'{sheet_name}!A1:Z1000').execute()
+    try:
+        response = sheet.values().get(spreadsheetId=spreadsheet_id, range=f'{sheet_name}!A1:Z1000').execute()
+    except googleapiclient.errors.HttpError as e:
+        st.error(f"API 요청 중 오류가 발생했습니다: {e}")
+        return None
     values = response.get('values', [])
     
     if not values:
