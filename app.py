@@ -123,7 +123,7 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
 
 def preprocess_and_visualize(data):
     # 데이터 전처리 및 평균값 계산
-    if data.shape[1] == 29:  # 총 29열이 포함된 경우
+    if data.shape[1] == 30:  # 총 29열이 포함된 경우
         # 열 이름 지정
         data.columns = ['Timestamp', '성별', '학년', '학반', '번호'] + \
                        [f'자기관리역량{i}' for i in range(1, 7)] + \
