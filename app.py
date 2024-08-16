@@ -9,7 +9,12 @@ import json
 
 # Streamlit 비밀 정보 읽기
 service_account_info = st.secrets["google"]["service_account_info"]
-service_account_info = json.loads(service_account_info)
+
+try:
+    service_account_info = json.loads(service_account_info)
+except json.JSONDecodeError as e:
+    st.error(f"JSON decode error: {e}")
+    raise
 
 # Google Sheets API 설정
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
