@@ -113,11 +113,21 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
 
 def preprocess_and_visualize(data):
     # 데이터 전처리 및 평균값 계산
-    if data.shape[1] == 6:  # 첫 열은 헤더
-        data.columns = ['학교', '역량1', '역량2', '역량3', '역량4', '역량5']
+    if data.shape[1] == 31:  # 총 31열이 포함된 경우
+        # 열 이름 지정
+        data.columns = ['Timestamp', '성별', '학교급', '학년', '학반', '번호'] + \
+                       [f'자기관리역량{i}' for i in range(1, 7)] + \
+                       [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
+                       [f'공감소통역량{i}' for i in range(1, 7)] + \
+                       [f'공동체역량{i}' for i in range(1, 7)]
         
-        # 숫자 데이터만 선택하고 평균값 계산
-        numerical_data = data.drop(columns=['학교']).astype(float)
+        # 필요한 데이터만 선택
+        numerical_data = data[['자기관리역량1', '자기관리역량2', '자기관리역량3', '자기관리역량4', '자기관리역량5', '자기관리역량6',
+                               '창의융합적사고역량1', '창의융합적사고역량2', '창의융합적사고역량3', '창의융합적사고역량4', '창의융합적사고역량5', '창의융합적사고역량6',
+                               '공감소통역량1', '공감소통역량2', '공감소통역량3', '공감소통역량4', '공감소통역량5', '공감소통역량6',
+                               '공동체역량1', '공동체역량2', '공동체역량3', '공동체역량4', '공동체역량5', '공동체역량6']].astype(float)
+        
+        # 평균값 계산
         average_data = numerical_data.mean().reset_index()
         average_data.columns = ['역량', '평균값']
         
