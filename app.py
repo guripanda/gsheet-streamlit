@@ -130,7 +130,7 @@ def preprocess_and_visualize(data):
                          [f'공동체역량{i}' for i in range(1, 7)]
     
     # 학년별 평균값 계산
-    grade_avg = data.groupby('학년')[competency_columns].mean().reset_index()
+    grade_avg = data.groupby('학년')[competency_columns].mean(numeric_only=True).reset_index()
     
     # 데이터프레임으로 변환
     # 먼저 melt로 데이터 변형
