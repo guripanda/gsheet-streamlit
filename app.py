@@ -180,7 +180,7 @@ if school_name and user_url:
         
         if data is not None:
             # 데이터를 자동으로 저장
-            save_to_school_sheet(data, master_spreadsheet_id, sheet_name)
+            save_to_school_sheet(data, master_spreadsheet_id, school_name)
             
             # 데이터 전처리 및 시각화
             preprocess_and_visualize(data)
