@@ -128,6 +128,8 @@ def preprocess_and_visualize(data):
                          [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
                          [f'공감소통역량{i}' for i in range(1, 7)] + \
                          [f'공동체역량{i}' for i in range(1, 7)]
+    # 데이터 타입을 실수형으로 변환
+    data[competency_columns] = data[competency_columns].astype(float)
     
     # 학년별 평균값 계산
     grade_avg = data.groupby('학년')[competency_columns].mean(numeric_only=True).reset_index()
