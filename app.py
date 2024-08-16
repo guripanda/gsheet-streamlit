@@ -22,6 +22,9 @@ service_account_info = {
     "universe_domain": st.secrets["google"]["universe_domain"],
 }
 
+#키값 오류 수정
+service_account_info["private_key"] = service_account_info["private_key"].replace("\\n", "\n")
+
 # Google Sheets API 설정
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPES)
