@@ -126,56 +126,37 @@ def preprocess_and_visualize(data):
     # 필요한 열들을 float 타입으로 변환, 변환되지 않는 열들은 무시
     data.iloc[:, 5:] = data.iloc[:, 5:].apply(pd.to_numeric, errors='coerce')
 
-    # 학년 및 성별에 따른 평균값 계산
-    grade_gender_avg = data.groupby(['학년', '성별']).mean(numeric_only=True).reset_index()
+    # Compute average values by grade
+    grade_avg = data.groupby('학년').mean(numeric_only=True).reset_index()
 
-    # 전체 평균값 계산 (모든 학년과 성별)
+    # Compute overall averages
     overall_avg = pd.DataFrame(data.iloc[:, 5:].mean(numeric_only=True)).T
     overall_avg['학년'] = '전체'
-    overall_avg['성별'] = '전체'
 
-    # 학년, 성별 및 전체 평균값 결합
-    combined_avg = pd.concat([grade_gender_avg, overall_avg], axis=0)
+    # Combine grade_avg and overall_avg
+    combined_avg = pd.concat([grade_avg, overall_avg], axis=0)
 
-    # 더 쉽게 그래프를 그릴 수 있도록 DataFrame을 melt
-    melted_data = combined_avg.melt(id_vars=['학년', '성별'], 
-                                    value_vars=combined_avg.columns[2:], # 평균값들만 포함
-                                    var_name='역량', value_name='평균')
-    
-    # 깔끔한 라벨을 위해 역량 번호 제거
-    melted_data['역량'] = melted_data['역량'].str.extract(r'([^\d]+)')
+    # Melt DataFrame for visualization
+    melted_data = combined_avg.melt(id_vars=['학년'], 
+                                    value_vars=combined_avg.columns[1:], 
+                                    var_name='역량', 
+                                    value_name='평균')
 
-    # 학년 및 성별 선택 드롭다운
-    grades = combined_avg['학년'].unique()
-    genders = combined_avg['성별'].unique()
+    # Clean up competency names
+    melted_data['역량'] = melted_data['역량'].str.extract(r'([^\d]+)')[0]
 
-    # 데이터 선택
-    selected_grade = st.selectbox("학년 선택", options=grades, index=0 if grades.size > 0 else None)
-    selected_gender = st.selectbox("성별 선택", options=genders, index=0 if genders.size > 0 else None)
+    # Display summary table
+    st.markdown("**### 역량 평균 현황**")
+    st.dataframe(melted_data.pivot(index='역량', columns='학년', values='평균'))
 
-    # 필터링 쿼리 문자열 작성
-    query_parts = []
-    if selected_grade != '전체':
-        query_parts.append(f'학년 == "{selected_grade}"')
-    if selected_gender != '전체':
-        query_parts.append(f'성별 == "{selected_gender}"')
-
-    query_string = ' and '.join(query_parts) if query_parts else 'True'
-
-    # 선택된 학년 및 성별을 기준으로 데이터 필터링
-    filtered_data = melted_data.query(query_string)
-
-    # 요약 데이터 표시
-    st.markdown(f"**### {selected_grade} 학년 {selected_gender}의 역량 평균 현황**")
-    st.dataframe(filtered_data.pivot(index='역량', columns='성별', values='평균'))
-
-    # 방사형 그래프 그리기
+    # Draw radial graph
     fig = px.line_polar(
-        filtered_data,
+        melted_data,
         r='평균',
         theta='역량',
+        color='학년',
         line_close=True,
-        title=f"역량 평균 - {selected_grade} 학년 {selected_gender}"
+        title="학생 역량 평균"
     )
     st.plotly_chart(fig)
 
