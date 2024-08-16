@@ -51,12 +51,7 @@ def get_data_range(spreadsheet_id, sheet_name):
         return None
     
     last_row = len(values)
-    last_col = len(values[0])
-    
-    # 'A' + last_col을 열 문자로 변환
-    last_col_letter = chr(65 + last_col - 1)
-    
-    return f'{sheet_name}!A1:{last_col_letter}{last_row}'
+    return f'{sheet_name}!A1:AC{last_row}'
 
 def load_data(spreadsheet_id, sheet_name='설문지 응답 시트1'):
     sheet = service.spreadsheets()
@@ -180,7 +175,7 @@ if school_name and user_url:
         
         if data is not None:
             # 데이터를 자동으로 저장
-            save_to_school_sheet(data, master_spreadsheet_id, sheet_name=school_name)
+            save_to_school_sheet(data, master_spreadsheet_id, school_name)
             
             # 데이터 전처리 및 시각화
             preprocess_and_visualize(data)
