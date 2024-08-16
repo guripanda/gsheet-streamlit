@@ -123,40 +123,32 @@ def preprocess_and_visualize(data):
                    [f'공감소통역량{i}' for i in range(1, 7)] + \
                    [f'공동체역량{i}' for i in range(1, 7)]
         
-    # 필요한 열들을 float 타입으로 변환, 변환되지 않는 열들은 무시
-    data.iloc[:, 5:] = data.iloc[:, 5:].apply(pd.to_numeric, errors='coerce')
+    # 필요한 데이터만 선택
+    competency_columns = [f'자기관리역량{i}' for i in range(1, 7)] + \
+                         [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
+                         [f'공감소통역량{i}' for i in range(1, 7)] + \
+                         [f'공동체역량{i}' for i in range(1, 7)]
+    
+    # 학년별 평균값 계산
+    grade_avg = data.groupby('학년')[competency_columns].mean().reset_index()
+    
+    # 데이터프레임으로 변환
+    # 먼저 melt로 데이터 변형
+    grade_avg_melted = grade_avg.melt(id_vars='학년', var_name='역량', value_name='평균값')
 
-    # Compute average values by grade
-    grade_avg = data.groupby('학년').mean(numeric_only=True).reset_index()
+    # 요약자료 보여주기
+    st.markdown("**### 학년별 학생미래역량 현황**")
+    st.dataframe(grade_avg)
 
-    # Compute overall averages
-    overall_avg = pd.DataFrame(data.iloc[:, 5:].mean(numeric_only=True)).T
-    overall_avg['학년'] = '전체'
-
-    # Combine grade_avg and overall_avg
-    combined_avg = pd.concat([grade_avg, overall_avg], axis=0)
-
-    # Melt DataFrame for visualization
-    melted_data = combined_avg.melt(id_vars=['학년'], 
-                                    value_vars=combined_avg.columns[1:], 
-                                    var_name='역량', 
-                                    value_name='평균')
-
-    # Clean up competency names
-    melted_data['역량'] = melted_data['역량'].str.extract(r'([^\d]+)')[0]
-
-    # Display summary table
-    st.markdown("**### 역량 평균 현황**")
-    st.dataframe(melted_data.pivot(index='역량', columns='학년', values='평균'))
-
-    # Draw radial graph
+    # 방사형 그래프 그리기
+    # 그래프를 그릴 때 학년별 평균값을 개별적으로 시각화
     fig = px.line_polar(
-        melted_data,
-        r='평균',
+        grade_avg_melted,
+        r='평균값',
         theta='역량',
         color='학년',
         line_close=True,
-        title="학생 역량 평균"
+        title="학년별 학생 설문 조사 평균 역량"
     )
     st.plotly_chart(fig)
 
