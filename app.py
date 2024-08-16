@@ -149,15 +149,17 @@ def preprocess_and_visualize(data):
     selected_grade = st.selectbox("학년 선택", options=combined_avg['학년'].unique(), index=len(combined_avg['학년']) - 1)
     selected_gender = st.selectbox("성별 선택", options=combined_avg['성별'].unique(), index=len(combined_avg['성별']) - 1)
 
+    # 필터링 쿼리 문자열 작성
+    query_parts = []
+    if selected_grade != '전체':
+        query_parts.append(f'학년 == "{selected_grade}"')
+    if selected_gender != '전체':
+        query_parts.append(f'성별 == "{selected_gender}"')
+
+    query_string = ' and '.join(query_parts) if query_parts else 'True'
+
     # 선택된 학년 및 성별을 기준으로 데이터 필터링
-    if selected_grade == '전체' and selected_gender == '전체':
-        filtered_data = melted_data
-    elif selected_grade == '전체':
-        filtered_data = melted_data[melted_data['성별'] == selected_gender]
-    elif selected_gender == '전체':
-        filtered_data = melted_data[melted_data['학년'] == selected_grade]
-    else:
-        filtered_data = melted_data[(melted_data['학년'] == selected_grade) & (melted_data['성별'] == selected_gender)]
+    filtered_data = melted_data.query(query_string)
 
     # 요약 데이터 표시
     st.markdown(f"**### {selected_grade} 학년 {selected_gender}의 역량 평균 현황**")
