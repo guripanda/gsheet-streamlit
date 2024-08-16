@@ -146,8 +146,12 @@ def preprocess_and_visualize(data):
     melted_data['역량'] = melted_data['역량'].str.extract(r'([^\d]+)')
 
     # 학년 및 성별 선택 드롭다운
-    selected_grade = st.selectbox("학년 선택", options=combined_avg['학년'].unique(), index=len(combined_avg['학년']) - 1)
-    selected_gender = st.selectbox("성별 선택", options=combined_avg['성별'].unique(), index=len(combined_avg['성별']) - 1)
+    grades = combined_avg['학년'].unique()
+    genders = combined_avg['성별'].unique()
+
+    # 데이터 선택
+    selected_grade = st.selectbox("학년 선택", options=grades, index=0 if grades.size > 0 else None)
+    selected_gender = st.selectbox("성별 선택", options=genders, index=0 if genders.size > 0 else None)
 
     # 필터링 쿼리 문자열 작성
     query_parts = []
