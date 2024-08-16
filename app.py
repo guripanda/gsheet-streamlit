@@ -49,9 +49,9 @@ def get_data_range(spreadsheet_id, sheet_name):
     if not values:
         st.error("데이터를 찾을 수 없습니다.")
         return None
-    
-    last_row = len(values)
-    return f'{sheet_name}!A1:AC{last_row}'
+    else:
+        last_row = len(values)
+        return f'{sheet_name}!A1:AC{last_row}'
 
 def load_data(spreadsheet_id, sheet_name='설문지 응답 시트1'):
     sheet = service.spreadsheets()
@@ -172,7 +172,7 @@ if school_name and user_url:
     
     if sheet_id:
         data = load_data(sheet_id)
-        
+        st.dataframe(data)
         if data is not None:
             # 데이터를 자동으로 저장
             save_to_school_sheet(data, master_spreadsheet_id, school_name)
