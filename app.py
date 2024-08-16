@@ -124,15 +124,24 @@ def preprocess_and_visualize(data):
                    [f'공동체역량{i}' for i in range(1, 7)]
         
     # 필요한 데이터만 선택
-    competency_columns = [f'자기관리역량{i}' for i in range(1, 7)] + \
-                         [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
-                         [f'공감소통역량{i}' for i in range(1, 7)] + \
-                         [f'공동체역량{i}' for i in range(1, 7)]
-    # 데이터 타입을 실수형으로 변환
-    data[competency_columns] = data[competency_columns].astype(float)
+    competency_columns = {
+        '자기관리역량': [f'자기관리역량{i}' for i in range(1, 7)],
+        '창의융합적사고역량': [f'창의융합적사고역량{i}' for i in range(1, 7)],
+        '공감소통역량': [f'공감소통역량{i}' for i in range(1, 7)],
+        '공동체역량': [f'공동체역량{i}' for i in range(1, 7)]
+    }
     
-    # 학년별 평균값 계산
-    grade_avg = data.groupby('학년')[competency_columns].mean(numeric_only=True).reset_index()
+    # 데이터 타입을 실수형으로 변환
+    for columns in competency_columns.values():
+        data[columns] = data[columns].astype(float)
+    
+    # 학년별 평균값 계산 (각 역량별 평균값)
+    grade_avg = data.groupby('학년').agg(
+        **{competency: (columns, 'mean') for competency, columns in competency_columns.items()}
+    ).reset_index()
+    
+    # 열 이름 변경
+    grade_avg.columns = ['학년'] + [f'{competency} 평균값' for competency in competency_columns]
     
     # 데이터프레임으로 변환
     # 먼저 melt로 데이터 변형
