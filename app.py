@@ -117,7 +117,7 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
 
 def preprocess_and_visualize(data):
     # 열 이름 지정
-    data.columns = ['순','Timestamp', '성별', '학년', '학반', '번호'] + \
+    data.columns = ['Timestamp', '성별', '학년', '학반', '번호'] + \
                    [f'자기관리역량{i}' for i in range(1, 7)] + \
                    [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
                    [f'공감소통역량{i}' for i in range(1, 7)] + \
@@ -172,7 +172,7 @@ if school_name and user_url:
     
     if sheet_id:
         data = load_data(sheet_id)
-        st.dataframe(data)
+
         if data is not None:
             # 데이터를 자동으로 저장
             save_to_school_sheet(data, master_spreadsheet_id, school_name)
