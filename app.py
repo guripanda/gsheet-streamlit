@@ -123,14 +123,14 @@ def preprocess_and_visualize(data):
                    [f'공감소통역량{i}' for i in range(1, 7)] + \
                    [f'공동체역량{i}' for i in range(1, 7)]
         
-    # 필요한 열들을 float 타입으로 변환
-    data.iloc[:, 5:] = data.iloc[:, 5:].astype(float)
+    # 필요한 열들을 float 타입으로 변환, 변환되지 않는 열들은 무시
+    data.iloc[:, 5:] = data.iloc[:, 5:].apply(pd.to_numeric, errors='coerce')
 
     # 학년 및 성별에 따른 평균값 계산
-    grade_gender_avg = data.groupby(['학년', '성별']).mean().reset_index()
+    grade_gender_avg = data.groupby(['학년', '성별']).mean(numeric_only=True).reset_index()
 
     # 전체 평균값 계산 (모든 학년과 성별)
-    overall_avg = pd.DataFrame(data.iloc[:, 5:].mean()).T
+    overall_avg = pd.DataFrame(data.iloc[:, 5:].mean(numeric_only=True)).T
     overall_avg['학년'] = '전체'
     overall_avg['성별'] = '전체'
 
@@ -139,8 +139,7 @@ def preprocess_and_visualize(data):
 
     # 더 쉽게 그래프를 그릴 수 있도록 DataFrame을 melt
     melted_data = combined_avg.melt(id_vars=['학년', '성별'], 
-                                    value_vars=['자기관리역량1', '창의적사고역량1', 
-                                                '공감소통역량1', '공동체역량1'],
+                                    value_vars=combined_avg.columns[2:], # 평균값들만 포함
                                     var_name='역량', value_name='평균')
     
     # 깔끔한 라벨을 위해 역량 번호 제거
