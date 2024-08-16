@@ -179,9 +179,6 @@ if school_name and user_url:
         data = load_data(sheet_id)
         
         if data is not None:
-            # 학교 이름으로 시트를 생성하거나 가져옴
-            sheet_name = create_or_get_sheet(master_spreadsheet_id, school_name)
-            
             # 데이터를 자동으로 저장
             save_to_school_sheet(data, master_spreadsheet_id, sheet_name)
             
