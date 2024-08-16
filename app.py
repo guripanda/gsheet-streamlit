@@ -74,18 +74,21 @@ def load_data(spreadsheet_id, sheet_name='설문지 응답 시트1'):
         st.error("유효한 범위를 찾을 수 없습니다.")
         return None
 
-def create_or_get_sheet(spreadsheet_id, sheet_name):
+def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
     sheet = service.spreadsheets()
     
     # 시트 목록 가져오기
-    spreadsheet = sheet.get(spreadsheetId=spreadsheet_id).execute()
+    spreadsheet = sheet.get(spreadsheetId=master_spreadsheet_id).execute()
     sheets = spreadsheet.get('sheets', [])
     
-    # 시트 이름이 존재하는지 확인
-    sheet_exists = any(s['properties']['title'] == sheet_name for s in sheets)
-    
-    if not sheet_exists:
-        # 시트가 없으면 새로 생성
+    # 중복된 시트명이 존재하는지 확인
+    existing_sheet = next((s for s in sheets if s['properties']['title'] == sheet_name), None)
+
+    if existing_sheet:
+        # 중복된 시트가 있으면 업데이트
+        sheet_id = existing_sheet['properties']['sheetId']
+        
+    else:
         requests = {
             'requests': [
                 {
@@ -97,13 +100,9 @@ def create_or_get_sheet(spreadsheet_id, sheet_name):
                 }
             ]
         }
-        sheet.batchUpdate(spreadsheetId=spreadsheet_id, body=requests).execute()
-    
-    return sheet_name
-
-def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
-    sheet = service.spreadsheets()
-    
+        response = sheet.batchUpdate(spreadsheetId=spreadsheet_id, body=requests).execute()
+        sheet_id = response['replies'][0]['addSheet']['properties']['sheetId']
+        
     # 시트의 범위를 지정
     range_name = f'{sheet_name}!A1'
     
@@ -112,7 +111,7 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
         'values': data.values.tolist()
     }
     
-    result = sheet.values().append(
+    result = sheet.values().update(
         spreadsheetId=master_spreadsheet_id,
         range=range_name,
         valueInputOption='RAW',
@@ -122,48 +121,44 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
     return result
 
 def preprocess_and_visualize(data):
-    # 데이터 전처리 및 평균값 계산
-    if data.shape[1] == 30:  # 총 29열이 포함된 경우
-        # 열 이름 지정
-        data.columns = ['순','Timestamp', '성별', '학년', '학반', '번호'] + \
-                       [f'자기관리역량{i}' for i in range(1, 7)] + \
-                       [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
-                       [f'공감소통역량{i}' for i in range(1, 7)] + \
-                       [f'공동체역량{i}' for i in range(1, 7)]
+    # 열 이름 지정
+    data.columns = ['순','Timestamp', '성별', '학년', '학반', '번호'] + \
+                   [f'자기관리역량{i}' for i in range(1, 7)] + \
+                   [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
+                   [f'공감소통역량{i}' for i in range(1, 7)] + \
+                   [f'공동체역량{i}' for i in range(1, 7)]
         
-        # 필요한 데이터만 선택
-        self_management = data[[f'자기관리역량{i}' for i in range(1, 7)]].astype(float)
-        creative_thinking = data[[f'창의융합적사고역량{i}' for i in range(1, 7)]].astype(float)
-        empathy_communication = data[[f'공감소통역량{i}' for i in range(1, 7)]].astype(float)
-        community = data[[f'공동체역량{i}' for i in range(1, 7)]].astype(float)
+    # 필요한 데이터만 선택
+    self_management = data[[f'자기관리역량{i}' for i in range(1, 7)]].astype(float)
+    creative_thinking = data[[f'창의융합적사고역량{i}' for i in range(1, 7)]].astype(float)
+    empathy_communication = data[[f'공감소통역량{i}' for i in range(1, 7)]].astype(float)
+    community = data[[f'공동체역량{i}' for i in range(1, 7)]].astype(float)
         
-        # 평균값 계산
-        average_self_management = self_management.mean().mean()
-        average_creative_thinking = creative_thinking.mean().mean()
-        average_empathy_communication = empathy_communication.mean().mean()
-        average_community = community.mean().mean()
-        
-        # 데이터프레임으로 변환
-        average_data = pd.DataFrame({
-            '역량': ['자기관리', '창의융합적사고', '공감소통', '공동체'],
-            '평균값': [average_self_management, average_creative_thinking, average_empathy_communication, average_community]
-        })
+    # 평균값 계산
+    average_self_management = self_management.mean().mean()
+    average_creative_thinking = creative_thinking.mean().mean()
+    average_empathy_communication = empathy_communication.mean().mean()
+    average_community = community.mean().mean()
+       
+    # 데이터프레임으로 변환
+    average_data = pd.DataFrame({
+        '역량': ['자기관리', '창의융합적사고', '공감소통', '공동체'],
+        '평균값': [average_self_management, average_creative_thinking, average_empathy_communication, average_community]
+    })
 
-        # 요약자료 보여주기
-        st.markdown("**### 우리학교 학생미래역량 현황**")
-        st.dataframe(average_data)
+    # 요약자료 보여주기
+    st.markdown("**### 우리학교 학생미래역량 현황**")
+    st.dataframe(average_data)
         
-        # 방사형 그래프 그리기
-        fig = px.line_polar(
-            average_data,
-            r='평균값',
-            theta='역량',
-            line_close=True,
-            title="학생 설문 조사 평균 역량"
-        )
-        st.plotly_chart(fig)
-    else:
-        st.warning("데이터 형식이 올바르지 않습니다. 열 수가 맞지 않습니다.")
+    # 방사형 그래프 그리기
+    fig = px.line_polar(
+        average_data,
+        r='평균값',
+        theta='역량',
+        line_close=True,
+        title="학생 설문 조사 평균 역량"
+    )
+    st.plotly_chart(fig)
 
 # Streamlit UI
 st.title("대구미래학교 학생역량검사 결과 분석")
