@@ -58,7 +58,7 @@ def get_data_range(spreadsheet_id, sheet_name):
     
     return f'{sheet_name}!A1:{last_col_letter}{last_row}'
 
-def load_data(spreadsheet_id, sheet_name='Sheet1'):
+def load_data(spreadsheet_id, sheet_name='설문지 응답 시트1'):
     sheet = service.spreadsheets()
     range_name = get_data_range(spreadsheet_id, sheet_name)
     
@@ -180,13 +180,11 @@ if school_name and user_url:
         data = load_data(sheet_id)
         
         if data is not None:
-            st.dataframe(data)  # 불러온 데이터 표시
-            
             # 학교 이름으로 시트를 생성하거나 가져옴
             sheet_name = create_or_get_sheet(master_spreadsheet_id, school_name)
             
             # 데이터를 자동으로 저장
-            save_to_school_sheet(data, master_spreadsheet_id, sheet_name)
+            save_to_school_sheet(data, master_spreadsheet_id, 시트1)
             
             # 데이터 전처리 및 시각화
             preprocess_and_visualize(data)
