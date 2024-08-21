@@ -158,19 +158,20 @@ def preprocess_and_visualize(data):
         overall_avg[competency] = filtered_data[columns].mean().mean()
 
     # DataFrame for displaying averages
-    overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균값'])
+    overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
 
     # Display the DataFrame
-    st.markdown("**### 학생미래역량 평균 현황**")
+    st.markdown("**### 학생미래역량 평균 현황###**")
     st.dataframe(overall_avg_df)
 
     # Melt the DataFrame for plotting
-    overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값')
-
+    overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
+    st.write(overall_avg_melted)
+    
     # Plot radar chart
     fig = px.line_polar(
         overall_avg_melted,
-        r='평균값',
+        r='평균값_new',
         theta='역량',
         line_close=True,
     )
