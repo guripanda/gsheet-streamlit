@@ -173,7 +173,7 @@ school_name = st.text_input("학교 이름을 입력하세요")
 user_url = st.text_input("Google Sheets URL을 입력하세요")
 
 # 데이터를 저장할 중앙 Google Sheets ID
-master_spreadsheet_id = '1txggfKCwtJTpvVlWNXyUekEGdDXLo0Z-xkJTYQFi4T0'  # 중앙에서 데이터를 저장할 시트 ID 입력
+master_spreadsheet_id = st.secrets["google"]["master_sheet_id"]  # 중앙에서 데이터를 저장할 시트 ID 입력
 
 if school_name and user_url:
     sheet_id = extract_sheet_id(user_url)
