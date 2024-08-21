@@ -195,7 +195,7 @@ custom_css = """
 
 /* Default font size for larger screens */
 .responsive-title {
-    font-size: 4vw; /* Font size relative to viewport width */
+    font-size: calc(1.5vw + 1rem); /* Responsive font size with a base size */
     font-weight: bold;
     color: #333; /* Adjust text color as needed */
     text-align: center; /* Center-align the title */
@@ -203,19 +203,21 @@ custom_css = """
     white-space: nowrap; /* Prevent line breaks */
     overflow: hidden; /* Hide overflowed text */
     text-overflow: ellipsis; /* Show ellipsis (...) if text overflows */
+    max-width: 100%; /* Ensure it fits within the container */
+    display: block; /* Ensure proper block formatting */
 }
 
 /* Smaller screens */
 @media (max-width: 768px) {
     .responsive-title {
-        font-size: 6vw; /* Larger font size for smaller screens */
+        font-size: calc(2vw + 1rem); /* Adjust font size for smaller screens */
     }
 }
 
 /* Very small screens */
 @media (max-width: 480px) {
     .responsive-title {
-        font-size: 8vw; /* Even larger font size for very small screens */
+        font-size: calc(3vw + 1rem); /* Larger font size for very small screens */
     }
 }
 </style>
