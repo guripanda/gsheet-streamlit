@@ -166,19 +166,21 @@ def preprocess_and_visualize(data):
 # Streamlit UI
 st.title("대구미래학교 학생역량검사 결과 분석")
 
-# 학교 이름 입력
-school_name = st.text_input("학교 이름을 입력하세요")
+# 사이드바에 로그인 페이지 만들기
+st.sidebar.header('Login')
 
+#학교 이름 입력
+school_name = st.sidebar.text_input("학교 이름을 입력하세요")
 # 사용자가 입력할 Google Sheets URL
-user_url = st.text_input("Google Sheets URL을 입력하세요")
+user_url = st.sidebar.text_input("Google Sheets URL을 입력하세요")
 
 # 데이터를 저장할 중앙 Google Sheets ID
 master_spreadsheet_id = st.secrets["google"]["master_sheet_id"]  # 중앙에서 데이터를 저장할 시트 ID 입력
 
-if school_name and user_url:
+#데이터 처리 트리거 버튼
+if st.sidebar.button("분석결과")
     sheet_id = extract_sheet_id(user_url)
-    
-    if sheet_id:
+        if sheet_id:
         data = load_data(sheet_id)
 
         if data is not None:
