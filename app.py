@@ -180,13 +180,10 @@ master_spreadsheet_id = st.secrets["google"]["master_sheet_id"]  # 중앙에서 
 #데이터 처리 트리거 버튼
 if st.sidebar.button("분석결과"):
     sheet_id = extract_sheet_id(user_url)
-        if sheet_id:
-        data = load_data(sheet_id)
-
-        if data is not None:
-            # 데이터를 자동으로 저장
-            save_to_school_sheet(data, master_spreadsheet_id, school_name)
-            
-            # 데이터 전처리 및 시각화
-            preprocess_and_visualize(data)
+    data = load_data(sheet_id)
+    if data is not None:
+        # 데이터를 자동으로 저장
+        save_to_school_sheet(data, master_spreadsheet_id, school_name)
+        # 데이터 전처리 및 시각화
+        preprocess_and_visualize(data)
 st.write("제작: 대구광역시교육청 초등교육과 | © 2024")
