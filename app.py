@@ -189,3 +189,4 @@ if st.sidebar.button("분석결과")
             
             # 데이터 전처리 및 시각화
             preprocess_and_visualize(data)
+st.write("제작: 대구광역시교육청 초등교육과 | © 2024")
