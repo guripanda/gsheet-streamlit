@@ -166,7 +166,6 @@ def preprocess_and_visualize(data):
 
     # Melt the DataFrame for plotting
     overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
-    st.write(overall_avg_melted)
     
     # Plot radar chart
     fig = px.line_polar(
