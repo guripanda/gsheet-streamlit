@@ -149,6 +149,13 @@ def preprocess_and_visualize(data):
     # 세션 초기화
     if 'grade_avg_df' not in st.session_state:
         st.session_state.grade_avg_df = grade_avg_df
+        st.session_state.initial_data_set = True
+    # 세션 디버깅
+    if 'initial_data_set' in st.session_state and st.session_state.initial_data_set:
+        st.write("Data has been set in session state.")
+    else:
+        st.write("Data has not been set in session state.")
+        return
     
     # 유저가 선택할 수 있도록 드롭다운 메뉴 추가
     grades = ['전체'] + sorted(data['학년'].unique())
