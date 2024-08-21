@@ -137,22 +137,25 @@ def preprocess_and_visualize(data):
     data[competency_columns] = data[competency_columns].fillna(0)  # NaN을 0으로 대체
 
     # Filter data based on the selected grade
-    filtered_data = data if selected_grade == '전체' else data[data['학년'] == selected_grade]
+    if '학년' in data.columns:
+        filtered_data = data if selected_grade == '전체' else data[data['학년'] == selected_grade]
 
-    # Calculate averages by competency
-    overall_avg = {competency: filtered_data[columns].mean().mean() for competency, columns in competency_units.items()}
-    overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
+        # Calculate averages by competency
+        overall_avg = {competency: filtered_data[columns].mean().mean() for competency, columns in competency_units.items()}
+        overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
 
-    # Display the DataFrame
-    st.markdown("**### 학생미래역량 평균 현황###**")
-    st.dataframe(overall_avg_df)
+        # Display the DataFrame
+        st.markdown("**### 학생미래역량 평균 현황###**")
+        st.dataframe(overall_avg_df)
 
-    # Melt the DataFrame for plotting
-    overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
+        # Melt the DataFrame for plotting
+        overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
 
-    # Plot radar chart
-    fig = px.line_polar(overall_avg_melted, r='평균값_new', theta='역량', line_close=True)
-    st.plotly_chart(fig)
+        # Plot radar chart
+        fig = px.line_polar(overall_avg_melted, r='평균값_new', theta='역량', line_close=True)
+        st.plotly_chart(fig)
+    else:
+        st.error("데이터에 '학년' 열이 존재하지 않습니다.")
 
 # Streamlit UI
 custom_css = """
