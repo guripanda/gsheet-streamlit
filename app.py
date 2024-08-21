@@ -192,14 +192,26 @@ custom_css = """
     width: 100%;
     border-top: 1px solid #555;
 }
+
+/* single-line-title */
+.single-line-title {
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden; /* Hide overflowed text */
+    text-overflow: ellipsis; /* Show ellipsis (...) if text overflows */
+    font-size: 24px; /* Adjust font size as needed */
+    font-weight: bold;
+    color: #333; /* Adjust text color as needed */
+    margin-bottom: 20px; /* Add space below the title */
+    text-align: center; /* Center-align the title */
+}
 </style>
 """
+#CSS 설정가져오기
 st.markdown(custom_css, unsafe_allow_html=True)
-
 #머릿말
 st.markdown('<div class="header">대구미래학교 학생역량검사 분석 서비스</div>', unsafe_allow_html=True)
-st.title("대구미래학교 학생역량검사 결과 분석")
-
+#제목
+st.markdown('<div class="single-line-title">대구미래학교 학생역량검사 결과</div>', unsafe_allow_html=True)
 # 사이드바에 로그인 페이지 만들기
 st.sidebar.header('Login')
 
