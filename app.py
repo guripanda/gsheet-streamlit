@@ -241,7 +241,7 @@ if st.sidebar.button("분석결과"):
         st.session_state['initial_load'] = True
         st.session_state['selected_grade'] = '전체'
         # 데이터 전처리 및 시각화
-        preprocess_and_visualize(data)
+        preprocess_and_visualize(data, st.session_state['selected_grade'])
 if 'data' in st.session_state and st.session_state.get('initial_load', False):
     # Add selectbox for grade selection
     selected_grade = st.selectbox("학년 선택", ['전체'] + sorted(st.session_state['data']['학년'].unique()))
