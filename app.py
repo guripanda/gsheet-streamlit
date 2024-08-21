@@ -116,14 +116,7 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
     return result
 
 def preprocess_and_visualize(data):
-    # 열 이름 지정
-    data.columns = ['Timestamp', '성별', '학년', '학반', '번호'] + \
-                   [f'자기관리역량{i}' for i in range(1, 7)] + \
-                   [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
-                   [f'공감소통역량{i}' for i in range(1, 7)] + \
-                   [f'공동체역량{i}' for i in range(1, 7)]
-        
-    # 필요한 데이터만 선택
+    # Define competency_units inside the function
     competency_units = {
         '자기관리역량': [f'자기관리역량{i}' for i in range(1, 7)],
         '창의융합적사고역량': [f'창의융합적사고역량{i}' for i in range(1, 7)],
@@ -131,9 +124,18 @@ def preprocess_and_visualize(data):
         '공동체역량': [f'공동체역량{i}' for i in range(1, 7)]
     }
     
-    # 데이터 타입을 실수형으로 변환
-    data[list(sum(competency_units.values(), []))] = data[list(sum(competency_units.values(), []))].astype(float)
+    # 열 이름 지정
+    data.columns = ['Timestamp', '성별', '학년', '학반', '번호'] + \
+                   [f'자기관리역량{i}' for i in range(1, 7)] + \
+                   [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
+                   [f'공감소통역량{i}' for i in range(1, 7)] + \
+                   [f'공동체역량{i}' for i in range(1, 7)]
     
+    # 데이터 타입을 실수형으로 변환하고 결측치 처리
+    competency_columns = list(sum(competency_units.values(), []))
+    data[competency_columns] = data[competency_columns].astype(float)
+    data[competency_columns] = data[competency_columns].fillna(0)  # NaN을 0으로 대체
+
     # 학년별 평균값 계산 (각 역량별 평균값)
     grade_avg = {}
     for competency, columns in competency_units.items():
@@ -153,13 +155,12 @@ def preprocess_and_visualize(data):
         grade_avg_df = grade_avg_df[grade_avg_df['학년'] == selected_grade]
 
     # 데이터프레임으로 변환
-    # melt로 데이터 변형
     grade_avg_melted = grade_avg_df.melt(id_vars='학년', var_name='역량', value_name='평균값')
 
     # 요약자료 보여주기
     st.markdown("**### 학년별 학생미래역량 현황**")
     st.dataframe(grade_avg_df)
-
+    
     # 방사형 그래프 그리기
     fig = px.line_polar(
         grade_avg_melted,
@@ -169,6 +170,7 @@ def preprocess_and_visualize(data):
         line_close=True,
         title=f"{selected_grade if selected_grade != '전체' else '전체'} 학년 학생 설문 조사 평균 역량"
     )
+    
     st.plotly_chart(fig)
 
 # Streamlit UI
