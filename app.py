@@ -173,7 +173,6 @@ def preprocess_and_visualize(data):
         r='평균값',
         theta='역량',
         line_close=True,
-        title=f"{selected_grade if selected_grade != '전체' else '전체 학년'} 학생 설문 조사 평균 역량"
     )
     st.plotly_chart(fig)
 
