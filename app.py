@@ -116,14 +116,6 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
     return result
 
 def preprocess_and_visualize(data):
-    # Define competency_units inside the function
-    competency_units = {
-        '자기관리역량': [f'자기관리역량{i}' for i in range(1, 7)],
-        '창의융합적사고역량': [f'창의융합적사고역량{i}' for i in range(1, 7)],
-        '공감소통역량': [f'공감소통역량{i}' for i in range(1, 7)],
-        '공동체역량': [f'공동체역량{i}' for i in range(1, 7)]
-    }
-    
     # 열 이름 지정
     data.columns = ['Timestamp', '성별', '학년', '학반', '번호'] + \
                    [f'자기관리역량{i}' for i in range(1, 7)] + \
@@ -131,60 +123,58 @@ def preprocess_and_visualize(data):
                    [f'공감소통역량{i}' for i in range(1, 7)] + \
                    [f'공동체역량{i}' for i in range(1, 7)]
     
-    # 데이터 타입을 실수형으로 변환하고 결측치 처리
+    # 필요한 데이터만 선택
+    competency_units = {
+        '자기관리역량': [f'자기관리역량{i}' for i in range(1, 7)],
+        '창의융합적사고역량': [f'창의융합적사고역량{i}' for i in range(1, 7)],
+        '공감소통역량': [f'공감소통역량{i}' for i in range(1, 7)],
+        '공동체역량': [f'공동체역량{i}' for i in range(1, 7)]
+    }
+    
+    # 데이터 타입을 실수형으로 변환
     competency_columns = list(sum(competency_units.values(), []))
     data[competency_columns] = data[competency_columns].astype(float)
     data[competency_columns] = data[competency_columns].fillna(0)  # NaN을 0으로 대체
 
-    # 학년별 평균값 계산 (각 역량별 평균값)
-    grade_avg = {}
-    for competency, columns in competency_units.items():
-        grade_avg[competency] = data.groupby('학년')[columns].mean(numeric_only=True).mean(axis=1).reset_index(name=f'{competency} 평균값')
-    
-    # 모든 역량별 평균값을 병합
-    grade_avg_df = pd.merge(grade_avg['자기관리역량'], grade_avg['창의융합적사고역량'], on='학년')
-    grade_avg_df = pd.merge(grade_avg_df, grade_avg['공감소통역량'], on='학년')
-    grade_avg_df = pd.merge(grade_avg_df, grade_avg['공동체역량'], on='학년')
+    # Streamlit session state for data
+    if 'data' not in st.session_state:
+        st.session_state.data = data
 
-    # 세션 초기화
-    if 'grade_avg_df' not in st.session_state:
-        st.session_state.grade_avg_df = grade_avg_df
-        st.session_state.initial_data_set = True
-    # 세션 디버깅
-    if 'initial_data_set' in st.session_state and st.session_state.initial_data_set:
-        st.write("Data has been set in session state.")
-    else:
-        st.write("Data has not been set in session state.")
-        return
-    
-    # 유저가 선택할 수 있도록 드롭다운 메뉴 추가
+    data = st.session_state.data
+
+    # Add dropdown menu for selecting grade
     grades = ['전체'] + sorted(data['학년'].unique())
     selected_grade = st.selectbox("학년 선택", grades)
 
-    #데이터가 유지되도록 session state 사용
-    grade_avg_df = st.session_state.grade_avg_df.copy()
-    
+    # Filter data based on selected grade
     if selected_grade != '전체':
-        # 선택된 학년으로 데이터 필터링
-        grade_avg_df = grade_avg_df[grade_avg_df['학년'] == selected_grade]
+        filtered_data = data[data['학년'] == selected_grade]
+    else:
+        filtered_data = data
 
-    # 데이터프레임으로 변환
-    grade_avg_melted = grade_avg_df.melt(id_vars='학년', var_name='역량', value_name='평균값')
+    # Calculate averages by competency
+    overall_avg = {}
+    for competency, columns in competency_units.items():
+        overall_avg[competency] = filtered_data[columns].mean().mean()
 
-    # 요약자료 보여주기
-    st.markdown("**### 학년별 학생미래역량 현황**")
-    st.dataframe(grade_avg_df)
-    
-    # 방사형 그래프 그리기
+    # DataFrame for displaying averages
+    overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균값'])
+
+    # Display the DataFrame
+    st.markdown("**### 학생미래역량 평균 현황**")
+    st.dataframe(overall_avg_df)
+
+    # Melt the DataFrame for plotting
+    overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값')
+
+    # Plot radar chart
     fig = px.line_polar(
-        grade_avg_melted,
+        overall_avg_melted,
         r='평균값',
         theta='역량',
-        color='학년',
         line_close=True,
-        title=f"{selected_grade if selected_grade != '전체' else '전체'} 학년 학생 설문 조사 평균 역량"
+        title=f"{selected_grade if selected_grade != '전체' else '전체 학년'} 학생 설문 조사 평균 역량"
     )
-    
     st.plotly_chart(fig)
 
 # Streamlit UI
