@@ -193,25 +193,40 @@ custom_css = """
     border-top: 1px solid #555;
 }
 
-/* single-line-title */
-.single-line-title {
+/* Default font size for larger screens */
+.responsive-title {
+    font-size: 4vw; /* Font size relative to viewport width */
+    font-weight: bold;
+    color: #333; /* Adjust text color as needed */
+    text-align: center; /* Center-align the title */
+    margin-bottom: 20px; /* Add space below the title */
     white-space: nowrap; /* Prevent line breaks */
     overflow: hidden; /* Hide overflowed text */
     text-overflow: ellipsis; /* Show ellipsis (...) if text overflows */
-    font-size: 24px; /* Adjust font size as needed */
-    font-weight: bold;
-    color: #333; /* Adjust text color as needed */
-    margin-bottom: 20px; /* Add space below the title */
-    text-align: center; /* Center-align the title */
+}
+
+/* Smaller screens */
+@media (max-width: 768px) {
+    .responsive-title {
+        font-size: 6vw; /* Larger font size for smaller screens */
+    }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+    .responsive-title {
+        font-size: 8vw; /* Even larger font size for very small screens */
+    }
 }
 </style>
 """
+
 #CSS 설정가져오기
 st.markdown(custom_css, unsafe_allow_html=True)
 #머릿말
 st.markdown('<div class="header">대구미래학교 학생역량검사 분석 서비스</div>', unsafe_allow_html=True)
 #제목
-st.markdown('<div class="single-line-title">대구미래학교 학생역량검사 결과</div>', unsafe_allow_html=True)
+st.markdown('<div class="responsive-title">대구미래학교 학생역량검사 결과</div>', unsafe_allow_html=True)
 # 사이드바에 로그인 페이지 만들기
 st.sidebar.header('Login')
 
