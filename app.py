@@ -145,6 +145,10 @@ def preprocess_and_visualize(data):
     grade_avg_df = pd.merge(grade_avg['자기관리역량'], grade_avg['창의융합적사고역량'], on='학년')
     grade_avg_df = pd.merge(grade_avg_df, grade_avg['공감소통역량'], on='학년')
     grade_avg_df = pd.merge(grade_avg_df, grade_avg['공동체역량'], on='학년')
+
+    # 세션 초기화
+    if 'grade_avg_df' not in st.session_state:
+        st.session_state.grade_avg_df = grade_avg_df
     
     # 유저가 선택할 수 있도록 드롭다운 메뉴 추가
     grades = ['전체'] + sorted(data['학년'].unique())
