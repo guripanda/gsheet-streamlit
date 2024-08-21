@@ -171,7 +171,7 @@ custom_css = """
     background-color: #007BFF; /* Blue background */
     color: white;
     padding: 20px; /* Increased padding for more space */
-    text-align: left;
+    text-align: center;
     font-size: 24px;
     font-weight: bold;
     position: fixed;
