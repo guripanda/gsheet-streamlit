@@ -193,18 +193,17 @@ custom_css = """
     border-top: 1px solid #555;
 }
 
-/* Default font size for larger screens */
+/* General title styling */
 .responsive-title {
-    font-size: calc(1.5vw + 1rem); /* Responsive font size with a base size */
+    font-size: calc(1.5vw + 1rem); /* Responsive font size with base size */
     font-weight: bold;
     color: #333; /* Adjust text color as needed */
     text-align: center; /* Center-align the title */
     margin-bottom: 20px; /* Add space below the title */
-    white-space: nowrap; /* Prevent line breaks */
+    white-space: normal; /* Allow wrapping to avoid overflow */
     overflow: hidden; /* Hide overflowed text */
     text-overflow: ellipsis; /* Show ellipsis (...) if text overflows */
     max-width: 100%; /* Ensure it fits within the container */
-    display: block; /* Ensure proper block formatting */
 }
 
 /* Smaller screens */
