@@ -164,6 +164,40 @@ def preprocess_and_visualize(data):
     st.plotly_chart(fig)
 
 # Streamlit UI
+custom_css = """
+<style>
+/* Header Styles */
+.header {
+    background-color: #007BFF; /* Blue background */
+    color: white;
+    padding: 20px; /* Increased padding for more space */
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure the header is above other content */
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #343A40; /* Dark gray background */
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #555;
+}
+</style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
+
+#머릿말
+st.markdown('<div class="header">대구미래학교 학생역량검사 분석 서비스</div>', unsafe_allow_html=True)
 st.title("대구미래학교 학생역량검사 결과 분석")
 
 # 사이드바에 로그인 페이지 만들기
@@ -186,4 +220,6 @@ if st.sidebar.button("분석결과"):
         save_to_school_sheet(data, master_spreadsheet_id, school_name)
         # 데이터 전처리 및 시각화
         preprocess_and_visualize(data)
-st.write("제작: 대구광역시교육청 초등교육과 | © 2024")
+
+#꼬리말
+st.markdown('<div class="footer">&copy; 2024 대구광역시교육청 초등교육과. All rights reserved.</div>', unsafe_allow_html=True)
