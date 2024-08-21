@@ -178,7 +178,7 @@ user_url = st.sidebar.text_input("Google Sheets URL을 입력하세요")
 master_spreadsheet_id = st.secrets["google"]["master_sheet_id"]  # 중앙에서 데이터를 저장할 시트 ID 입력
 
 #데이터 처리 트리거 버튼
-if st.sidebar.button("분석결과")
+if st.sidebar.button("분석결과"):
     sheet_id = extract_sheet_id(user_url)
         if sheet_id:
         data = load_data(sheet_id)
