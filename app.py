@@ -219,7 +219,7 @@ custom_css = """
 #CSS 설정가져오기
 st.markdown(custom_css, unsafe_allow_html=True)
 #머릿말
-st.markdown('<div class="header">, unsafe_allow_html=True)
+st.markdown('<div class="header"></div>, unsafe_allow_html=True)
 #제목
 st.markdown('<div class="responsive-title">대구미래학교 학생역량검사 결과</div>', unsafe_allow_html=True)
 # 사이드바에 로그인 페이지 만들기
