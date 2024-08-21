@@ -144,6 +144,14 @@ def preprocess_and_visualize(data):
     grade_avg_df = pd.merge(grade_avg_df, grade_avg['공감소통역량'], on='학년')
     grade_avg_df = pd.merge(grade_avg_df, grade_avg['공동체역량'], on='학년')
     
+    # 유저가 선택할 수 있도록 드롭다운 메뉴 추가
+    grades = ['전체'] + sorted(data['학년'].unique())
+    selected_grade = st.selectbox("학년 선택", grades)
+    
+    if selected_grade != '전체':
+        # 선택된 학년으로 데이터 필터링
+        grade_avg_df = grade_avg_df[grade_avg_df['학년'] == selected_grade]
+
     # 데이터프레임으로 변환
     # melt로 데이터 변형
     grade_avg_melted = grade_avg_df.melt(id_vars='학년', var_name='역량', value_name='평균값')
@@ -159,7 +167,7 @@ def preprocess_and_visualize(data):
         theta='역량',
         color='학년',
         line_close=True,
-        title="학년별 학생 설문 조사 평균 역량"
+        title=f"{selected_grade if selected_grade != '전체' else '전체'} 학년 학생 설문 조사 평균 역량"
     )
     st.plotly_chart(fig)
 
