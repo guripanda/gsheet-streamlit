@@ -115,7 +115,7 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
 
     return result
 
-def preprocess_and_visualize(data):
+def preprocess_and_visualize(data, selected_grade):
     # 열 이름 지정
     data.columns = ['Timestamp', '성별', '학년', '학반', '번호'] + \
                    [f'자기관리역량{i}' for i in range(1, 7)] + \
