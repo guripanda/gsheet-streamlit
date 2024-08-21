@@ -233,15 +233,16 @@ master_spreadsheet_id = st.secrets["google"]["master_sheet_id"]  # 중앙에서 
 #데이터 처리 트리거 버튼
 if st.sidebar.button("분석결과"):
     sheet_id = extract_sheet_id(user_url)
-    data = load_data(sheet_id)
-    if data is not None:
-        # 데이터를 자동으로 저장
-        save_to_school_sheet(data, master_spreadsheet_id, school_name)
-        st.session_state['data'] = data
-        st.session_state['initial_load'] = True
-        st.session_state['selected_grade'] = '전체'
-        # 데이터 전처리 및 시각화
-        preprocess_and_visualize(data, st.session_state['selected_grade'])
+    if sheet_id:
+        data = load_data(sheet_id)
+        if data is not None:
+            # 데이터를 자동으로 저장
+            save_to_school_sheet(data, master_spreadsheet_id, school_name)
+            st.session_state['data'] = data
+            st.session_state['initial_load'] = True
+            st.session_state['selected_grade'] = '전체'
+            # 데이터 전처리 및 시각화
+            preprocess_and_visualize(data, '전체')
 if 'data' in st.session_state and st.session_state.get('initial_load', False):
     # Add selectbox for grade selection
     selected_grade = st.selectbox("학년 선택", ['전체'] + sorted(st.session_state['data']['학년'].unique()))
