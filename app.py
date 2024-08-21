@@ -151,7 +151,15 @@ def preprocess_and_visualize(data):
         filtered_data = data[data['학년'] == selected_grade]
     else:
         filtered_data = data
+        
+    # Debugging: Show the first few rows of filtered data
+    st.write(f"**Selected Grade: {selected_grade}**")
+    st.write(filtered_data.head())  # Show the first few rows of filtered data
 
+    if filtered_data.empty:
+        st.warning("선택한 학년에 대한 데이터가 없습니다.")
+        return
+        
     # Calculate averages by competency
     overall_avg = {}
     for competency, columns in competency_units.items():
