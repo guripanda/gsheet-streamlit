@@ -248,11 +248,11 @@ if st.sidebar.button("분석결과"):
             preprocess_and_visualize(data, '전체')
 if 'data' in st.session_state and st.session_state.get('initial_load', False):
     # Add selectbox for grade selection
-    selected_grade = st.selectbox("학년 선택", ['전체'] + sorted(st.session_state['data']['학년'].unique()))
+    selected_grade = st.sidebar.selectbox("학년 선택", ['전체'] + sorted(st.session_state['data']['학년'].unique()))
     st.session_state['selected_grade'] = selected_grade
   
     # Button to refresh the table and graph
-    if st.button("조회"):
+    if st.sidebar.button("조회"):
         preprocess_and_visualize(st.session_state['data'], st.session_state['selected_grade'])
         
 #꼬리말
