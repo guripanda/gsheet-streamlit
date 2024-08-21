@@ -136,53 +136,63 @@ def preprocess_and_visualize(data):
     data[competency_columns] = data[competency_columns].astype(float)
     data[competency_columns] = data[competency_columns].fillna(0)  # NaN을 0으로 대체
 
-    # Streamlit session state for data
-    if 'data' not in st.session_state:
-        st.session_state.data = data
-
-    data = st.session_state.data
-
     # Add dropdown menu for selecting grade
     grades = ['전체'] + sorted(data['학년'].unique())
     selected_grade = st.selectbox("학년 선택", grades)
-
+    
     # Filter data based on selected grade
     if selected_grade != '전체':
         filtered_data = data[data['학년'] == selected_grade]
-    else:
-        filtered_data = data
         
-    # Debugging: Show the first few rows of filtered data
-    st.write(f"**Selected Grade: {selected_grade}**")
-    st.write(filtered_data.head())  # Show the first few rows of filtered data
+        # Calculate averages by competency
+        overall_avg = {}
+        for competency, columns in competency_units.items():
+            overall_avg[competency] = filtered_data[columns].mean().mean()
 
-    if filtered_data.empty:
-        st.warning("선택한 학년에 대한 데이터가 없습니다.")
-        return
-        
-    # Calculate averages by competency
-    overall_avg = {}
-    for competency, columns in competency_units.items():
-        overall_avg[competency] = filtered_data[columns].mean().mean()
+        # DataFrame for displaying averages
+        overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
 
-    # DataFrame for displaying averages
-    overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
+        # Display the DataFrame
+        st.markdown("**### 학생미래역량 평균 현황###**")
+        st.dataframe(overall_avg_df)
 
-    # Display the DataFrame
-    st.markdown("**### 학생미래역량 평균 현황###**")
-    st.dataframe(overall_avg_df)
-
-    # Melt the DataFrame for plotting
-    overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
+        # Melt the DataFrame for plotting
+        overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
     
-    # Plot radar chart
-    fig = px.line_polar(
-        overall_avg_melted,
-        r='평균값_new',
-        theta='역량',
-        line_close=True,
-    )
-    st.plotly_chart(fig)
+        # Plot radar chart
+        fig = px.line_polar(
+            overall_avg_melted,
+            r='평균값_new',
+            theta='역량',
+            line_close=True,
+        )
+        st.plotly_chart(fig)
+
+    else:
+        filtered_data = data     
+        # Calculate averages by competency
+        overall_avg = {}
+        for competency, columns in competency_units.items():
+            overall_avg[competency] = filtered_data[columns].mean().mean()
+
+        # DataFrame for displaying averages
+        overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
+
+        # Display the DataFrame
+        st.markdown("**### 학생미래역량 평균 현황###**")
+        st.dataframe(overall_avg_df)
+
+        # Melt the DataFrame for plotting
+        overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
+    
+        # Plot radar chart
+        fig = px.line_polar(
+            overall_avg_melted,
+            r='평균값_new',
+            theta='역량',
+            line_close=True,
+        )
+        st.plotly_chart(fig)
 
 # Streamlit UI
 custom_css = """
