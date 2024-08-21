@@ -149,6 +149,9 @@ def preprocess_and_visualize(data):
     # 유저가 선택할 수 있도록 드롭다운 메뉴 추가
     grades = ['전체'] + sorted(data['학년'].unique())
     selected_grade = st.selectbox("학년 선택", grades)
+
+    #데이터가 유지되도록 session state 사용
+    grade_avg_df = st.session_state.grade_avg_df.copy()
     
     if selected_grade != '전체':
         # 선택된 학년으로 데이터 필터링
