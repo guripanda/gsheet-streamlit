@@ -148,7 +148,7 @@ def preprocess_and_visualize(data, selected_grade):
 
         # Display the DataFrame
         st.markdown("**### 학생미래역량 평균 현황###**")
-        st.dataframe(overall_avg_df)
+        st.dataframe(overall_avg_df, width=1000, height=400)
 
         # Melt the DataFrame for plotting
         overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
