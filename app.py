@@ -151,7 +151,8 @@ def preprocess_and_visualize(data, selected_grade):
         st.dataframe(overall_avg_df, width=600)
 
         # Melt the DataFrame for plotting
-        overall_avg_melted = overall_avg_df.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
+        overall_avg_df2=overall_avg_df[['역량', '평균']]
+        overall_avg_melted = overall_avg_df2.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
 
         # Plot radar chart
         fig = px.line_polar(overall_avg_melted, r='평균값_new', theta='역량', line_close=True)
