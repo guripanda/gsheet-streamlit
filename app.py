@@ -147,7 +147,7 @@ def preprocess_and_visualize(data, selected_grade):
         overall_avg_df['20점 환산'] = overall_avg_df['평균'] * 4
 
         # Display the DataFrame
-        st.markdown("**### 학생미래역량 평균 현황###**")
+        st.markdown(f"**###{selected_grade}학년 학생미래역량 평균 현황###**")
         st.dataframe(overall_avg_df, width=600)
 
         # Melt the DataFrame for plotting
