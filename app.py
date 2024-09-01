@@ -219,6 +219,7 @@ def preprocess_and_visualize(data, selected_grade):
 
         # Plot radar chart
         fig = px.line_polar(overall_avg_melted, r='평균값_new', theta='역량', line_close=True)
+        st.write("")
         st.markdown(f"**<{selected_grade} 학년 학생미래역량 프로파일>**", unsafe_allow_html=True)
         st.plotly_chart(fig)
     else:
@@ -228,6 +229,8 @@ def preprocess_and_visualize(data, selected_grade):
 st.markdown('<div class="header"></div>', unsafe_allow_html=True)
 #제목
 st.markdown('<div class="responsive-title">대구미래학교 학생 미래역량<br>분석 프로그램</div>', unsafe_allow_html=True)
+st.write("")
+st.write("")
 # 사이드바에 로그인 페이지 만들기
 st.sidebar.header('Login')
 
