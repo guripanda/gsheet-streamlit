@@ -144,8 +144,8 @@ def preprocess_and_visualize(data, selected_grade):
         overall_avg = {competency: filtered_data[columns].mean().mean() for competency, columns in competency_units.items()}
         overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
         overall_avg_df['평균'] = overall_avg_df['평균'].round(1)
-        overall_avg_df['10점 환산'] = overall_avg_df['평균'] * 2.round(1)
-        overall_avg_df['20점 환산'] = overall_avg_df['평균'] * 4.round(1)
+        overall_avg_df['10점 환산'] = (overall_avg_df['평균'] * 2).round(1)
+        overall_avg_df['20점 환산'] = (overall_avg_df['평균'] * 4).round(1)
 
         # Display the DataFrame
         st.markdown(f"**###{selected_grade} 학년 학생미래역량 평균 현황###**")
