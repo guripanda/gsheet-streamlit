@@ -143,8 +143,9 @@ def preprocess_and_visualize(data, selected_grade):
         # Calculate averages by competency
         overall_avg = {competency: filtered_data[columns].mean().mean() for competency, columns in competency_units.items()}
         overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
-        overall_avg_df['10점 환산'] = overall_avg_df['평균'] * 2
-        overall_avg_df['20점 환산'] = overall_avg_df['평균'] * 4
+        overall_avg_df['평균'] = overall_avg_df['평균'].round(1)
+        overall_avg_df['10점 환산'] = overall_avg_df['평균'] * 2.round(1)
+        overall_avg_df['20점 환산'] = overall_avg_df['평균'] * 4.round(1)
 
         # Display the DataFrame
         st.markdown(f"**###{selected_grade} 학년 학생미래역량 평균 현황###**")
@@ -224,7 +225,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 #머릿말
 st.markdown('<div class="header"></div>', unsafe_allow_html=True)
 #제목
-st.markdown('<div class="responsive-title">대구미래학교 학생역량검사 결과</div>', unsafe_allow_html=True)
+st.markdown('<div class="responsive-title">대구미래학교 학생 미래역량 분석 프로그램</div>', unsafe_allow_html=True)
 # 사이드바에 로그인 페이지 만들기
 st.sidebar.header('Login')
 
