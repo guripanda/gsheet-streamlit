@@ -7,6 +7,68 @@ import re
 import plotly.express as px
 import json
 
+# Streamlit UI 설정하기기
+custom_css = """
+<style>
+/* Header Styles */
+.header {
+    background-color: #007BFF; /* Blue background */
+    color: white;
+    padding: 20px; /* Increased padding for more space */
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure the header is above other content */
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #343A40; /* Dark gray background */
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #555;
+}
+
+/* General title styling */
+.responsive-title {
+    font-size: calc(1.5vw + 1rem); /* Responsive font size with base size */
+    font-weight: bold;
+    color: #333; /* Adjust text color as needed */
+    text-align: center; /* Center-align the title */
+    margin-bottom: 20px; /* Add space below the title */
+    white-space: normal; /* Allow wrapping to avoid overflow */
+    overflow: hidden; /* Hide overflowed text */
+    text-overflow: ellipsis; /* Show ellipsis (...) if text overflows */
+    max-width: 100%; /* Ensure it fits within the container */
+}
+
+/* Smaller screens */
+@media (max-width: 768px) {
+    .responsive-title {
+        font-size: calc(2vw + 1rem); /* Adjust font size for smaller screens */
+    }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+    .responsive-title {
+        font-size: calc(3vw + 1rem); /* Larger font size for very small screens */
+    }
+}
+</style>
+"""
+
+#CSS 설정가져오기
+st.markdown(custom_css, unsafe_allow_html=True)
+
 # Streamlit 비밀 정보 읽기
 service_account_info = {
     "type": st.secrets["google"]["type"],
@@ -162,67 +224,6 @@ def preprocess_and_visualize(data, selected_grade):
     else:
         st.error("데이터에 '학년' 열이 존재하지 않습니다.")
 
-# Streamlit UI
-custom_css = """
-<style>
-/* Header Styles */
-.header {
-    background-color: #007BFF; /* Blue background */
-    color: white;
-    padding: 20px; /* Increased padding for more space */
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000; /* Ensure the header is above other content */
-}
-
-/* Footer Styles */
-.footer {
-    background-color: #343A40; /* Dark gray background */
-    color: white;
-    padding: 10px;
-    text-align: center;
-    font-size: 14px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    border-top: 1px solid #555;
-}
-
-/* General title styling */
-.responsive-title {
-    font-size: calc(1.5vw + 1rem); /* Responsive font size with base size */
-    font-weight: bold;
-    color: #333; /* Adjust text color as needed */
-    text-align: center; /* Center-align the title */
-    margin-bottom: 20px; /* Add space below the title */
-    white-space: normal; /* Allow wrapping to avoid overflow */
-    overflow: hidden; /* Hide overflowed text */
-    text-overflow: ellipsis; /* Show ellipsis (...) if text overflows */
-    max-width: 100%; /* Ensure it fits within the container */
-}
-
-/* Smaller screens */
-@media (max-width: 768px) {
-    .responsive-title {
-        font-size: calc(2vw + 1rem); /* Adjust font size for smaller screens */
-    }
-}
-
-/* Very small screens */
-@media (max-width: 480px) {
-    .responsive-title {
-        font-size: calc(3vw + 1rem); /* Larger font size for very small screens */
-    }
-}
-</style>
-"""
-
-#CSS 설정가져오기
-st.markdown(custom_css, unsafe_allow_html=True)
 #머릿말
 st.markdown('<div class="header"></div>', unsafe_allow_html=True)
 #제목
