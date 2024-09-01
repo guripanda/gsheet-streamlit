@@ -12,7 +12,7 @@ custom_css = """
 <style>
 /* Header Styles */
 .header {
-    background-color: #007BFF; /* Blue background */
+    background-color: #003366; /* Blue background */
     color: white;
     padding: 20px; /* Increased padding for more space */
     text-align: center;
