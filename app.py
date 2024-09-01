@@ -225,7 +225,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 #머릿말
 st.markdown('<div class="header"></div>', unsafe_allow_html=True)
 #제목
-st.markdown('<div class="responsive-title">대구미래학교 학생 미래역량 분석 프로그램</div>', unsafe_allow_html=True)
+st.markdown('<div class="responsive-title">대구미래학교 학생 미래역량<p>분석 프로그램</div>', unsafe_allow_html=True)
 # 사이드바에 로그인 페이지 만들기
 st.sidebar.header('Login')
 
