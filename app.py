@@ -210,7 +210,7 @@ def preprocess_and_visualize(data, selected_grade):
         overall_avg_df['20점 환산'] = (overall_avg_df['평균'] * 4).round(1)
        
         # 합계 행 추가
-        total_row = overall_avg_df[['평균', '10점 환산', '20점 환산']].mean()
+        total_row = overall_avg_df[['평균', '10점 환산', '20점 환산']].mean().round(1)
         total_row['역량'] = '전체'
         overall_avg_df = pd.concat([overall_avg_df, pd.DataFrame([total_row])], ignore_index=True)
 
