@@ -208,13 +208,18 @@ def preprocess_and_visualize(data, selected_grade):
         overall_avg_df['평균'] = overall_avg_df['평균'].round(1)
         overall_avg_df['10점 환산'] = (overall_avg_df['평균'] * 2).round(1)
         overall_avg_df['20점 환산'] = (overall_avg_df['평균'] * 4).round(1)
+       
+        # 합계 행 추가
+        total_row = overall_avg_df[['평균', '10점 환산', '20점 환산']].mean()
+        total_row['역량'] = '전체'
+        overall_avg_df = pd.concat([overall_avg_df, pd.DataFrame([total_row])], ignore_index=True)
 
         # Display the DataFrame
         st.markdown(f"**<{selected_grade} 학년 학생미래역량 평균 현황>**", unsafe_allow_html=True)
         st.markdown(overall_avg_df.to_html(index=False).replace('<th>', '<th style="text-align: center;">'), unsafe_allow_html=True)
 
         # Melt the DataFrame for plotting
-        overall_avg_df2=overall_avg_df[['역량', '평균']]
+        overall_avg_df2=overall_avg_df[['역량', '평균']].iloc[:-1]
         overall_avg_melted = overall_avg_df2.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
 
         # Plot radar chart
