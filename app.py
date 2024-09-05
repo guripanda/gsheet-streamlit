@@ -204,13 +204,25 @@ def preprocess_and_visualize(data, selected_grade):
 
         # Calculate averages by competency
         overall_avg = {competency: filtered_data[columns].mean().mean() for competency, columns in competency_units.items()}
-        overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '평균'])
-        overall_avg_df['평균'] = overall_avg_df['평균'].round(1)
-        overall_avg_df['10점 환산'] = (overall_avg_df['평균'] * 2).round(1)
-        overall_avg_df['20점 환산'] = (overall_avg_df['평균'] * 4).round(1)
-       
+        overall_avg_df = pd.DataFrame(list(overall_avg.items()), columns=['역량', '본교_평균'])
+        overall_avg_df['본교_평균'] = overall_avg_df['본교_평균'].round(1)
+        overall_avg_df['본교_10점 환산'] = (overall_avg_df['본교_평균'] * 2).round(1)
+        overall_avg_df['본교_20점 환산'] = (overall_avg_df['본교_평균'] * 4).round(1)
+
+        # 대구 평균 역량 점수 값 입력
+        daegu_avg_data = {
+            '자기관리역량': 3.5,
+            '창의융합적사고역량': 3.0,
+            '공감소통역량': 3.8,
+            '공동체역량': 3.7
+        }
+
+        # 대구 평균 열 추가
+        daegu_avg_df = pd.DataFrame(list(daegu_avg_data.items()), columns=['역량', '대구_평균'])
+        overall_avg_df = pd.merge(overall_avg_df, daegu_avg_df, on='역량', how='left')
+        
         # 합계 행 추가
-        total_row = overall_avg_df[['평균', '10점 환산', '20점 환산']].mean().round(1)
+        total_row = overall_avg_df[['본교_평균', '본교_10점 환산', '본교_20점 환산', '대구_평균']].mean().round(1)
         total_row['역량'] = '전체'
         overall_avg_df = pd.concat([overall_avg_df, pd.DataFrame([total_row])], ignore_index=True)
 
@@ -219,11 +231,12 @@ def preprocess_and_visualize(data, selected_grade):
         st.markdown(overall_avg_df.to_html(index=False).replace('<th>', '<th style="text-align: center;">'), unsafe_allow_html=True)
 
         # Melt the DataFrame for plotting
-        overall_avg_df2=overall_avg_df[['역량', '평균']].iloc[:-1]
+        overall_avg_df2=overall_avg_df[['역량', '본교_평균', '대구_평균']].iloc[:-1]
         overall_avg_melted = overall_avg_df2.melt(id_vars='역량', var_name='변수', value_name='평균값_new')
 
         # Plot radar chart
-        fig = px.line_polar(overall_avg_melted, r='평균값_new', theta='역량', line_close=True)
+        fig = px.line_polar(overall_avg_melted, r='평균값_new', theta='역량',color= '변수', line_close=True,
+                           color_discrete_map={'본교_평균': 'blue', '대구_평균': 'red'})
         st.write("")
         st.markdown(f"**<{selected_grade} 학년 학생 미래역량 프로파일>**", unsafe_allow_html=True)
         st.plotly_chart(fig)
