@@ -215,7 +215,7 @@ def preprocess_and_visualize(data, selected_grade):
         overall_avg_df = pd.concat([overall_avg_df, pd.DataFrame([total_row])], ignore_index=True)
 
         # Display the DataFrame
-        st.markdown(f"**<{selected_grade} 학년 학생미래역량 평균 현황>**", unsafe_allow_html=True)
+        st.markdown(f"**<{selected_grade} 학년 학생 미래역량 평균 점수>**", unsafe_allow_html=True)
         st.markdown(overall_avg_df.to_html(index=False).replace('<th>', '<th style="text-align: center;">'), unsafe_allow_html=True)
 
         # Melt the DataFrame for plotting
@@ -225,7 +225,7 @@ def preprocess_and_visualize(data, selected_grade):
         # Plot radar chart
         fig = px.line_polar(overall_avg_melted, r='평균값_new', theta='역량', line_close=True)
         st.write("")
-        st.markdown(f"**<{selected_grade} 학년 학생미래역량 프로파일>**", unsafe_allow_html=True)
+        st.markdown(f"**<{selected_grade} 학년 학생 미래역량 프로파일>**", unsafe_allow_html=True)
         st.plotly_chart(fig)
     else:
         st.error("데이터에 '학년' 열이 존재하지 않습니다.")
