@@ -210,12 +210,40 @@ def preprocess_and_visualize(data, selected_grade):
         overall_avg_df['본교_20점 환산'] = (overall_avg_df['본교_평균'] * 4).round(1)
 
         # 대구 평균 역량 점수 값 입력
-        daegu_avg_data = {
-            '자기관리역량': 3.5,
-            '창의융합적사고역량': 3.0,
-            '공감소통역량': 3.8,
-            '공동체역량': 3.7
-        }
+        has_elementary = data['학년'].str.contains('초4|초5|초6').any()
+        has_middle = data['학년'].str.contains('중1|중2|중3').any()
+        
+        if has_elementary and has_middle:
+            # 초등과 중등이 섞여서 들어온 경우; 대구 평균 0 처리
+            daegu_avg_data = {
+                '자기관리역량': 0,
+                '창의융합적사고역량': 0,
+                '공감소통역량': 0,
+                '공동체역량': 0
+            }
+        elif has_middle:
+            # Daegu average for grades 1-3
+            daegu_avg_data = {
+                '자기관리역량': 3.3,
+                '창의융합적사고역량': 3.6,
+                '공감소통역량': 3.5,
+                '공동체역량': 3.4
+            }
+        elif has_elementary:
+            # Daegu average for grades 4-6
+            daegu_avg_data = {
+                '자기관리역량': 3.5,
+                '창의융합적사고역량': 3.0,
+                '공감소통역량': 3.8,
+                '공동체역량': 3.7
+            }
+        else:
+            daegu_avg_data = {
+                '자기관리역량': 0,
+                '창의융합적사고역량': 0,
+                '공감소통역량': 0,
+                '공동체역량': 0
+            }
 
         # 대구 평균 열 추가
         daegu_avg_df = pd.DataFrame(list(daegu_avg_data.items()), columns=['역량', '대구_평균'])
