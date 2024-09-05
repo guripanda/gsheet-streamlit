@@ -222,7 +222,7 @@ def preprocess_and_visualize(data, selected_grade):
                 '공동체역량': 0
             }
         elif has_middle:
-            # Daegu average for grades 1-3
+            # 중학교 대구 평균
             daegu_avg_data = {
                 '자기관리역량': 3.3,
                 '창의융합적사고역량': 3.6,
@@ -230,7 +230,7 @@ def preprocess_and_visualize(data, selected_grade):
                 '공동체역량': 3.4
             }
         elif has_elementary:
-            # Daegu average for grades 4-6
+            # 초등학교 대구 평균
             daegu_avg_data = {
                 '자기관리역량': 3.5,
                 '창의융합적사고역량': 3.0,
