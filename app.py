@@ -192,9 +192,19 @@ def preprocess_and_visualize(data, selected_grade):
         '공감소통역량': [f'공감소통역량{i}' for i in range(1, 7)],
         '공동체역량': [f'공동체역량{i}' for i in range(1, 7)]
     }
+
+    # 텍스트에 점수 부여
+    text_to_number_mapping = {
+        '매우 그렇다.': 5,
+        '그렇다.': 4,
+        '보통이다.': 3,
+        '그렇지 않다.': 2,
+        '전혀 그렇지 않다.': 1
+    }
+    competency_columns = list(sum(competency_units.values(), []))
+    data[competency_columns] = data[competency_columns].replace(text_to_number_mapping)
     
     # 데이터 타입을 실수형으로 변환
-    competency_columns = list(sum(competency_units.values(), []))
     data[competency_columns] = data[competency_columns].astype(float)
     data[competency_columns] = data[competency_columns].fillna(0)  # NaN을 0으로 대체
 
