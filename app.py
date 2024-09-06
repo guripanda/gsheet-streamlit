@@ -201,6 +201,7 @@ def preprocess_and_visualize(data, selected_grade):
         '그렇지 않다.': 2,
         '전혀 그렇지 않다.': 1
     }
+    
     competency_columns = list(sum(competency_units.values(), []))
     data[competency_columns] = data[competency_columns].replace(text_to_number_mapping)
     
