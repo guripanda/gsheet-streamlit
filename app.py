@@ -187,9 +187,9 @@ def preprocess_and_visualize(data, selected_grade):
     
     # 필요한 데이터만 선택
     competency_units = {
-        '공감소통역량': [f'자기관리역량{i}' for i in range(1, 7)],
+        '공감소통역량': [f'공감소통역량{i}' for i in range(1, 7)],
         '창의융합적사고역량': [f'창의융합적사고역량{i}' for i in range(1, 7)],
-        '자기관리리역량': [f'공감소통역량{i}' for i in range(1, 7)],
+        '자기관리역량': [f'자기관리역량{i}' for i in range(1, 7)],
         '공동체역량': [f'공동체역량{i}' for i in range(1, 7)]
     }
 
@@ -252,7 +252,7 @@ def preprocess_and_visualize(data, selected_grade):
             daegu_avg_data = {
                 '공감소통역량': 0,
                 '창의융합적사고역량': 0,
-                '자기관리리역량': 0,
+                '자기관리역량': 0,
                 '공동체역량': 0
             }
 
