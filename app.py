@@ -180,16 +180,16 @@ def save_to_school_sheet(data, master_spreadsheet_id, sheet_name):
 def preprocess_and_visualize(data, selected_grade):
     # 열 이름 지정
     data.columns = ['Timestamp', '성별', '학년', '학반', '번호'] + \
-                   [f'자기관리역량{i}' for i in range(1, 7)] + \
-                   [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
                    [f'공감소통역량{i}' for i in range(1, 7)] + \
+                   [f'창의융합적사고역량{i}' for i in range(1, 7)] + \
+                   [f'자기관리역량{i}' for i in range(1, 7)] + \
                    [f'공동체역량{i}' for i in range(1, 7)]
     
     # 필요한 데이터만 선택
     competency_units = {
-        '자기관리역량': [f'자기관리역량{i}' for i in range(1, 7)],
+        '공감소통역량': [f'자기관리역량{i}' for i in range(1, 7)],
         '창의융합적사고역량': [f'창의융합적사고역량{i}' for i in range(1, 7)],
-        '공감소통역량': [f'공감소통역량{i}' for i in range(1, 7)],
+        '자기관리리역량': [f'공감소통역량{i}' for i in range(1, 7)],
         '공동체역량': [f'공동체역량{i}' for i in range(1, 7)]
     }
 
@@ -227,32 +227,32 @@ def preprocess_and_visualize(data, selected_grade):
         if has_elementary and has_middle:
             # 초등과 중등이 섞여서 들어온 경우; 대구 평균 0 처리
             daegu_avg_data = {
-                '자기관리역량': 0,
-                '창의융합적사고역량': 0,
                 '공감소통역량': 0,
+                '창의융합적사고역량': 0,
+                '자기관리리역량': 0,
                 '공동체역량': 0
             }
         elif has_middle:
             # 중학교 대구 평균
             daegu_avg_data = {
-                '자기관리역량': 3.3,
+                '공감소통역량': 3.3,
                 '창의융합적사고역량': 3.6,
-                '공감소통역량': 3.5,
+                '자기관리역량': 3.5,
                 '공동체역량': 3.4
             }
         elif has_elementary:
             # 초등학교 대구 평균
             daegu_avg_data = {
-                '자기관리역량': 3.5,
+                '공감소통역량': 3.5,
                 '창의융합적사고역량': 3.0,
-                '공감소통역량': 3.8,
+                '자기관리역량': 3.8,
                 '공동체역량': 3.7
             }
         else:
             daegu_avg_data = {
-                '자기관리역량': 0,
-                '창의융합적사고역량': 0,
                 '공감소통역량': 0,
+                '창의융합적사고역량': 0,
+                '자기관리리역량': 0,
                 '공동체역량': 0
             }
 
