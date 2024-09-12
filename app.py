@@ -29,7 +29,7 @@ custom_css = """
     background-color: #343A40; /* Dark gray background */
     color: white;
     padding: 10px;
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     position: fixed;
     bottom: 0;
