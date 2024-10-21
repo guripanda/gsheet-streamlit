@@ -246,7 +246,7 @@ def preprocess_and_visualize(data, selected_grade):
                 '자기관리역량': 4.28,
                 '공동체역량': 4.35
             }
-        elif has_middle and has_middle_1:
+        elif has_middle_1:
             # 중학교1 대구 평균
             daegu_avg_data = {
                 '공감소통역량': 4.42,
@@ -254,7 +254,7 @@ def preprocess_and_visualize(data, selected_grade):
                 '자기관리역량': 4.25,
                 '공동체역량': 4.34
             }
-        elif has_middle and has_middle_2:
+        elif has_middle_2:
             # 중학교2 대구 평균
             daegu_avg_data = {
                 '공감소통역량': 4.46,
@@ -262,7 +262,7 @@ def preprocess_and_visualize(data, selected_grade):
                 '자기관리역량': 4.27,
                 '공동체역량': 4.33
             }
-        elif has_middle and has_middle_3:
+        elif has_middle_3:
             # 중학교3 대구 평균
             daegu_avg_data = {
                 '공감소통역량': 4.49,
@@ -278,7 +278,7 @@ def preprocess_and_visualize(data, selected_grade):
                 '자기관리역량': 4.28,
                 '공동체역량': 4.38
             }
-        elif has_elementary and has_elementary_4:
+        elif has_elementary_4:
             # 초등학교4 대구 평균
             daegu_avg_data = {
                 '공감소통역량': 4.38,
@@ -286,7 +286,7 @@ def preprocess_and_visualize(data, selected_grade):
                 '자기관리역량': 4.31,
                 '공동체역량': 4.40
             }
-        elif has_elementary and has_elementary_5:
+        elif has_elementary_5:
             # 초등학교5 대구 평균
             daegu_avg_data = {
                 '공감소통역량': 4.42,
@@ -294,7 +294,7 @@ def preprocess_and_visualize(data, selected_grade):
                 '자기관리역량': 4.26,
                 '공동체역량': 4.38
             }
-        elif has_elementary and has_elementary_6:
+        elif has_elementary_6:
             # 초등학교6 대구 평균
             daegu_avg_data = {
                 '공감소통역량': 4.43,
