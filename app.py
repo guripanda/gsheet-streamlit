@@ -221,14 +221,14 @@ def preprocess_and_visualize(data, selected_grade):
         overall_avg_df['본교_20점 환산'] = (overall_avg_df['본교_평균'] * 4).round(1)
 
         # 대구 평균 역량 점수 값 입력
-        has_elementary = data['학년'].str.contains('초4|초5|초6').any()
-        has_elementary_4 = (data['학년'].str.contains('초4') & ~data['학년'].str.contains('초5|초6')).any()
-        has_elementary_5 = (data['학년'].str.contains('초5') & ~data['학년'].str.contains('초4|초6')).any()
-        has_elementary_6 = (data['학년'].str.contains('초6') & ~data['학년'].str.contains('초4|초5')).any()           
-        has_middle = data['학년'].str.contains('중1|중2|중3').any()
-        has_middle_1 = (data['학년'].str.contains('중1') & ~data['학년'].str.contains('중2|중3')).any()
-        has_middle_2 = (data['학년'].str.contains('중2') & ~data['학년'].str.contains('중1|중3')).any() 
-        has_middle_3 = (data['학년'].str.contains('중3') & ~data['학년'].str.contains('중1|중2')).any() 
+        has_elementary = filtered_data['학년'].str.contains('초4|초5|초6').any()
+        has_elementary_4 = (filtered_data['학년'].str.contains('초4') & ~filtered_data['학년'].str.contains('초5|초6')).any()
+        has_elementary_5 = (filtered_data['학년'].str.contains('초5') & ~filtered_data['학년'].str.contains('초4|초6')).any()
+        has_elementary_6 = (filtered_data['학년'].str.contains('초6') & ~filtered_data['학년'].str.contains('초4|초5')).any()           
+        has_middle = filtered_data['학년'].str.contains('중1|중2|중3').any()
+        has_middle_1 = (filtered_data['학년'].str.contains('중1') & ~filtered_data['학년'].str.contains('중2|중3')).any()
+        has_middle_2 = (filtered_data['학년'].str.contains('중2') & ~filtered_data['학년'].str.contains('중1|중3')).any() 
+        has_middle_3 = (filtered_data['학년'].str.contains('중3') & ~filtered_data['학년'].str.contains('중1|중2')).any() 
         
         if has_elementary and has_middle:
             # 초등과 중등이 섞여서 들어온 경우; 대구 평균 0 처리
