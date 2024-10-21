@@ -222,7 +222,13 @@ def preprocess_and_visualize(data, selected_grade):
 
         # 대구 평균 역량 점수 값 입력
         has_elementary = data['학년'].str.contains('초4|초5|초6').any()
+        has_elementary_4 = (data['학년'].str.contains('초4') & ~data['학년'].str.contains('초5|초6')).any()
+        has_elementary_5 = (data['학년'].str.contains('초5') & ~data['학년'].str.contains('초4|초6')).any()
+        has_elementary_6 = (data['학년'].str.contains('초6') & ~data['학년'].str.contains('초4|초5')).any()           
         has_middle = data['학년'].str.contains('중1|중2|중3').any()
+        has_middle_1 = (data['학년'].str.contains('중1') & ~data['학년'].str.contains('중2|중3')).any()
+        has_middle_2 = (data['학년'].str.contains('중2') & ~data['학년'].str.contains('중1|중3')).any() 
+        has_middle_3 = (data['학년'].str.contains('중3') & ~data['학년'].str.contains('중1|중2')).any() 
         
         if has_elementary and has_middle:
             # 초등과 중등이 섞여서 들어온 경우; 대구 평균 0 처리
@@ -240,6 +246,30 @@ def preprocess_and_visualize(data, selected_grade):
                 '자기관리역량': 4.28,
                 '공동체역량': 4.35
             }
+        elif has_middle_1:
+            # 중학교1 대구 평균
+            daegu_avg_data = {
+                '공감소통역량': 4.42,
+                '창의융합적사고역량': 4.17,
+                '자기관리역량': 4.25,
+                '공동체역량': 4.34
+            }
+        elif has_middle_2:
+            # 중학교2 대구 평균
+            daegu_avg_data = {
+                '공감소통역량': 4.46,
+                '창의융합적사고역량': 4.21,
+                '자기관리역량': 4.27,
+                '공동체역량': 4.33
+            }
+        elif has_middle_3:
+            # 중학교3 대구 평균
+            daegu_avg_data = {
+                '공감소통역량': 4.49,
+                '창의융합적사고역량': 4.26,
+                '자기관리역량': 4.31,
+                '공동체역량': 4.37
+            }
         elif has_elementary:
             # 초등학교 대구 평균
             daegu_avg_data = {
@@ -247,6 +277,30 @@ def preprocess_and_visualize(data, selected_grade):
                 '창의융합적사고역량': 4.19,
                 '자기관리역량': 4.28,
                 '공동체역량': 4.38
+            }
+        elif has_elementary_4:
+            # 초등학교4 대구 평균
+            daegu_avg_data = {
+                '공감소통역량': 4.38,
+                '창의융합적사고역량': 4.19,
+                '자기관리역량': 4.31,
+                '공동체역량': 4.40
+            }
+        elif has_elementary_5:
+            # 초등학교5 대구 평균
+            daegu_avg_data = {
+                '공감소통역량': 4.42,
+                '창의융합적사고역량': 4.18,
+                '자기관리역량': 4.26,
+                '공동체역량': 4.38
+            }
+        elif has_elementary_6:
+            # 초등학교6 대구 평균
+            daegu_avg_data = {
+                '공감소통역량': 4.43,
+                '창의융합적사고역량': 4.21,
+                '자기관리역량': 4.27,
+                '공동체역량': 4.37
             }
         else:
             daegu_avg_data = {
