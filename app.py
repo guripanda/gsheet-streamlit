@@ -323,8 +323,6 @@ def preprocess_and_visualize(data, selected_grade):
         st.markdown(f"**<{selected_grade} 학년 학생 미래역량 평균 점수>**", unsafe_allow_html=True)
         st.markdown(overall_avg_df.to_html(index=False).replace('<th>', '<th style="text-align: center;">'), unsafe_allow_html=True)
         st.write(filtered_data['학년'].value_counts())
-        st.write(f"Has Middle: {has_middle}")
-        st.write(f"Has Middl_1: {has_middle_1}")
 
         # Melt the DataFrame for plotting
         overall_avg_df2=overall_avg_df[['역량', '본교_평균', '대구_평균']].iloc[:-1]
